@@ -46,7 +46,7 @@ export const Hero: React.FC = () => {
     <section
       id="top"
       className="hero-root relative w-full overflow-hidden"
-      style={{ minHeight: '100svh' }}
+      style={{ minHeight: 'calc(100svh - 64px)' }}
     >
       {/* Background image */}
       <Image
@@ -55,26 +55,26 @@ export const Hero: React.FC = () => {
         priority
         placeholder="blur"
         fill
-        sizes="100vw"
-        className="object-cover"
+        sizes="(max-width: 767px) 1280px, 100vw"
+        className="hero-bg object-cover"
         style={{ objectPosition: '50% 65%' }}
       />
 
       {/* Gradient overlay — bottom to top */}
       <div className="hero-gradient-bottom absolute inset-0 pointer-events-none" />
 
-      {/* Gradient overlay — left to right */}
+      {/* Gradient overlay — left to right (desktop only) */}
       <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: 'linear-gradient(to right, rgba(3,12,45,0.35) 0%, rgba(3,12,45,0.35) 55%, transparent 100%)',
-        }}
+        className="hero-gradient-left absolute inset-0 pointer-events-none"
       />
 
-      {/* Content — anchored to bottom third */}
-      <div className="absolute inset-x-0 bottom-20 z-10">
-        <div className="mx-auto max-w-[1200px] px-6 pb-20">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
+      {/* Content — anchored to bottom */}
+      <div className="hero-content absolute inset-x-0 bottom-0 z-10">
+        <div
+          className="mx-auto max-w-[1200px]"
+          style={{ paddingLeft: 'max(20px, env(safe-area-inset-left))', paddingRight: 'max(20px, env(safe-area-inset-right))' }}
+        >
+          <div className="hero-inner grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
             {/* Left group: headline + proof line */}
             <div className="lg:col-span-7">
               {/* Headline */}
@@ -97,10 +97,10 @@ export const Hero: React.FC = () => {
                 </span>
               </h1>
 
-              {/* Proof line + social icons */}
+              {/* Proof line + social icons (desktop ≥768) */}
               <div
                 className={cn(
-                  'flex flex-wrap items-center gap-x-5 gap-y-2 mb-8 lg:mb-0',
+                  'hero-proof-row hidden md:flex flex-wrap items-center gap-x-5 gap-y-2 mb-8 lg:mb-0',
                   !prefersReducedMotion && 'animate-[heroFadeUp_0.6s_ease-out_0.1s_both]',
                 )}
               >
@@ -113,7 +113,7 @@ export const Hero: React.FC = () => {
 
                 {COPY.hero.social.linkedin && (
                   <>
-                    <span className="hidden sm:block w-px h-4 bg-white/25" />
+                    <span className="w-px h-4 bg-white/25" />
                     <a
                       href={COPY.hero.social.linkedin}
                       target="_blank"
@@ -128,7 +128,6 @@ export const Hero: React.FC = () => {
 
                 {COPY.hero.social.instagram && (
                   <>
-                    {!COPY.hero.social.linkedin && <span className="hidden sm:block w-px h-4 bg-white/25" />}
                     <a
                       href={COPY.hero.social.instagram}
                       target="_blank"
@@ -148,7 +147,7 @@ export const Hero: React.FC = () => {
               {/* Email capture card — glass */}
               <div
                 className={cn(
-                  'rounded-2xl p-2',
+                  'hero-card rounded-2xl p-2',
                   !prefersReducedMotion && 'animate-[heroFadeUp_0.6s_ease-out_0.2s_both]',
                 )}
                 style={{
@@ -159,11 +158,11 @@ export const Hero: React.FC = () => {
                 }}
               >
                 {status === 'success' ? (
-                  <div className="flex items-center justify-center h-14 px-4 rounded-xl bg-white/10 text-white text-sm font-medium">
+                  <div className="flex items-center justify-center px-4 rounded-xl bg-white/10 text-white text-sm font-medium" style={{ height: 56 }}>
                     {COPY.hero.successState}
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
+                  <form onSubmit={handleSubmit} className="hero-form flex flex-col sm:flex-row gap-2">
                     <input
                       type="email"
                       required
@@ -174,7 +173,7 @@ export const Hero: React.FC = () => {
                       }}
                       placeholder={COPY.hero.inputPlaceholder}
                       className={cn(
-                        'flex-1 h-12 sm:h-14 px-4 rounded-xl min-w-0 text-white outline-none',
+                        'hero-input flex-1 px-4 rounded-xl min-w-0 text-white outline-none',
                         'bg-transparent border-none',
                         'placeholder:text-white/70',
                         'focus-visible:ring-1 focus-visible:ring-white/45',
@@ -188,7 +187,8 @@ export const Hero: React.FC = () => {
                       variant="primary"
                       size="md"
                       disabled={status === 'loading'}
-                      className="h-12 sm:h-14 px-5 whitespace-nowrap"
+                      className="hero-btn px-5 whitespace-nowrap"
+                      style={{ height: 56 }}
                     >
                       {status === 'loading' ? 'Joining...' : COPY.hero.ctaLabel}
                     </Button>
@@ -199,7 +199,7 @@ export const Hero: React.FC = () => {
               {/* Body copy */}
               <p
                 className={cn(
-                  'text-white/85 mt-4 max-w-[420px]',
+                  'text-white/85 mt-4 max-w-full lg:max-w-[420px]',
                   !prefersReducedMotion && 'animate-[heroFadeUp_0.6s_ease-out_0.3s_both]',
                 )}
                 style={{ fontSize: 13, lineHeight: 1.5 }}
@@ -222,16 +222,16 @@ export const Hero: React.FC = () => {
         </div>
       </div>
 
-      {/* Scroll cue */}
+      {/* Scroll cue — hidden on mobile and short viewports */}
       <div
         className={cn(
-          'absolute bottom-6 left-1/2 -translate-x-1/2 z-10',
-          !prefersReducedMotion && 'hidden md:block',
+          'absolute bottom-6 left-1/2 -translate-x-1/2 z-10 hero-scroll-cue',
+          !prefersReducedMotion && 'animate-[scrollCue_2s_ease-in-out_infinite]',
         )}
         aria-hidden="true"
       >
         <svg
-          className="text-white/50 animate-[scrollCue_2s_ease-in-out_infinite]"
+          className="text-white/50"
           width="20"
           height="20"
           viewBox="0 0 24 24"
@@ -248,25 +248,16 @@ export const Hero: React.FC = () => {
       {/* Animations + responsive overrides */}
       <style jsx global>{`
         @keyframes heroFadeUp {
-          from {
-            opacity: 0;
-            transform: translateY(16px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+          from { opacity: 0; transform: translateY(16px); }
+          to   { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes scrollCue {
-          0%, 100% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(4px);
-          }
+          0%, 100% { transform: translateY(0); }
+          50%      { transform: translateY(4px); }
         }
 
+        /* Default overlays (≥768) */
         .hero-gradient-bottom {
           background: linear-gradient(
             to top,
@@ -275,7 +266,116 @@ export const Hero: React.FC = () => {
             transparent 100%
           );
         }
+        .hero-gradient-left {
+          background: linear-gradient(to right, rgba(3,12,45,0.35) 0%, rgba(3,12,45,0.35) 55%, transparent 100%);
+        }
 
+        /* Mobile (<768) */
+        @media (max-width: 767px) {
+          .hero-root {
+            min-height: 620px !important;
+            height: auto !important;
+          }
+          .hero-bg {
+            object-position: 68% 55% !important;
+          }
+          .hero-gradient-bottom {
+            background: linear-gradient(
+              to top,
+              rgba(3, 12, 45, 0.70) 0%,
+              rgba(3, 12, 45, 0.70) 60%,
+              transparent 100%
+            ) !important;
+          }
+          .hero-gradient-left {
+            background: none !important;
+          }
+          .hero-content {
+            padding-bottom: 48px;
+          }
+          /* Type scale */
+          .hero-root h1 {
+            font-size: clamp(28px, 8vw, 38px) !important;
+            line-height: 1.1 !important;
+          }
+          .hero-root .hero-proof-row + p,
+          .hero-proof-row p {
+            font-size: 10px !important;
+            letter-spacing: 0.06em !important;
+          }
+          .hero-root .lg\\:max-w-\\[420px\\] {
+            max-width: 100% !important;
+          }
+          /* Body copy: 14px on mobile */
+          .hero-root p[style*="font-size: 13px"] {
+            font-size: 14px !important;
+          }
+          /* Glass card: vertical stack */
+          .hero-card {
+            padding: 10px !important;
+            border-radius: 14px !important;
+          }
+          .hero-form {
+            flex-direction: column !important;
+          }
+          .hero-input {
+            height: 48px !important;
+            font-size: 16px !important;
+            width: 100% !important;
+          }
+          .hero-btn {
+            height: 48px !important;
+            width: 100% !important;
+          }
+          /* Social icons: separate row below proof line on mobile */
+          .hero-proof-row {
+            display: none !important;
+          }
+          /* Scroll cue: hidden on mobile */
+          .hero-scroll-cue {
+            display: none !important;
+          }
+          /* Reduce blur for performance */
+          .hero-card {
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+          }
+        }
+
+        /* Tablet (768-1023): single column, left-aligned */
+        @media (min-width: 768px) and (max-width: 1023px) {
+          .hero-bg {
+            object-position: 58% 60% !important;
+          }
+          .hero-root h1 {
+            font-size: clamp(36px, 6vw, 48px) !important;
+          }
+          .hero-inner {
+            grid-template-columns: 1fr !important;
+          }
+          .lg\\:col-span-5 {
+            max-width: 520px;
+          }
+        }
+
+        /* Desktop ≥1024 */
+        @media (min-width: 1024px) {
+          .hero-root {
+            min-height: calc(100svh - 64px) !important;
+          }
+          .hero-bg {
+            object-position: 50% 65% !important;
+          }
+        }
+
+        /* Landscape phone: min-height auto */
+        @media (max-height: 600px) and (orientation: landscape) {
+          .hero-root {
+            min-height: auto !important;
+          }
+        }
+
+        /* Autofill guard */
         input:-webkit-autofill,
         input:-webkit-autofill:hover,
         input:-webkit-autofill:focus {
@@ -284,17 +384,18 @@ export const Hero: React.FC = () => {
           transition: background-color 5000s ease-in-out 0s;
         }
 
-        @media (max-width: 767px) {
-          .hero-root {
-            min-height: auto !important;
+        /* Blur fallback */
+        @supports not (backdrop-filter: blur(1px)) {
+          .hero-card {
+            background: rgba(255,255,255,0.20) !important;
+            backdrop-filter: none !important;
           }
-          .hero-gradient-bottom {
-            background: linear-gradient(
-              to top,
-              rgba(3, 12, 45, 0.65) 0%,
-              rgba(3, 12, 45, 0.65) 45%,
-              transparent 100%
-            ) !important;
+        }
+        @media (max-width: 767px) {
+          @supports not (backdrop-filter: blur(1px)) {
+            .hero-card {
+              background: rgba(255,255,255,0.20) !important;
+            }
           }
         }
       `}</style>

@@ -4,7 +4,7 @@ import { SmoothScroll } from '@/components/motion/SmoothScroll';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Sahvo — Tourist Safety & Price Transparency in India',
+  title: 'Sahvo — Know the fare. Know the guide.',
   description:
     'Sahvo is a mobile safety and assistance app for travellers in India — a trust layer over Indian travel. Pre-MVP Jaipur pilot launching in Hindi and English.',
   keywords: [
