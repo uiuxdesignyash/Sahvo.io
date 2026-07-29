@@ -33,7 +33,6 @@ function checkRateLimit(ip: string): boolean {
 function isValidEmail(email: string): boolean {
   if (!email || typeof email !== 'string') return false;
   if (email.length > 254) return false;
-  // Basic but sufficient pattern
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
@@ -43,7 +42,6 @@ function isValidEmail(email: string): boolean {
 
 export async function POST(request: Request) {
   try {
-    // Reject bodies > 2KB
     const contentLength = request.headers.get('content-length');
     if (contentLength && parseInt(contentLength, 10) > 2048) {
       return NextResponse.json(
@@ -55,12 +53,10 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { email, source, company } = body;
 
-    // Honeypot — silent success, never tell a bot it was caught
     if (company) {
       return NextResponse.json({ ok: true }, { status: 200 });
     }
 
-    // Validate email
     if (!isValidEmail(email)) {
       return NextResponse.json(
         { ok: false, error: 'Please enter a valid email address.' },
@@ -68,7 +64,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Rate limit
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
     if (!checkRateLimit(ip)) {
       return NextResponse.json(
@@ -77,16 +72,15 @@ export async function POST(request: Request) {
       );
     }
 
-    // Forward to Apps Script
     const userAgent = request.headers.get('user-agent') || '';
 
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 25000);
+    const timeout = setTimeout(() => controller.abort(), 60000);
 
     try {
       const res = await fetch(SCRIPT_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({
           secret: SCRIPT_SECRET,
           type: 'waitlist',
@@ -101,9 +95,7 @@ export async function POST(request: Request) {
       clearTimeout(timeout);
 
       const responseText = await res.text().catch(() => '');
-      console.log('[waitlist] Apps Script response:', res.status, res.url, responseText.slice(0, 500));
 
-      // Apps Script often returns 302 redirect to /dev — treat any 2xx as success
       if (res.ok || res.status === 302) {
         let data: any = {};
         try { data = JSON.parse(responseText); } catch { /* not JSON */ }

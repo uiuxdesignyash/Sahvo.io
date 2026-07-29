@@ -42,7 +42,6 @@ function isValidEmail(email: string): boolean {
 
 export async function POST(request: Request) {
   try {
-    // Reject bodies > 8KB
     const contentLength = request.headers.get('content-length');
     if (contentLength && parseInt(contentLength, 10) > 8192) {
       return NextResponse.json(
@@ -54,12 +53,10 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { name, email, question, company } = body;
 
-    // Honeypot — silent success
     if (company) {
       return NextResponse.json({ ok: true }, { status: 200 });
     }
 
-    // Validate email
     if (!isValidEmail(email)) {
       return NextResponse.json(
         { ok: false, error: 'Please enter a valid email address.' },
@@ -67,7 +64,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Validate question
     if (!question || typeof question !== 'string') {
       return NextResponse.json(
         { ok: false, error: 'Please enter your question.' },
@@ -89,10 +85,8 @@ export async function POST(request: Request) {
       );
     }
 
-    // Validate name (optional, max 100)
     const trimmedName = name ? String(name).trim().slice(0, 100) : '';
 
-    // Rate limit
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
     if (!checkRateLimit(ip)) {
       return NextResponse.json(
@@ -101,16 +95,15 @@ export async function POST(request: Request) {
       );
     }
 
-    // Forward to Apps Script
     const userAgent = request.headers.get('user-agent') || '';
 
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 25000);
+    const timeout = setTimeout(() => controller.abort(), 60000);
 
     try {
       const res = await fetch(SCRIPT_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({
           secret: SCRIPT_SECRET,
           type: 'query',
@@ -126,9 +119,7 @@ export async function POST(request: Request) {
       clearTimeout(timeout);
 
       const responseText = await res.text().catch(() => '');
-      console.log('[query] Apps Script response:', res.status, res.url, responseText.slice(0, 500));
 
-      // Apps Script often returns 302 redirect to /dev — treat any 2xx as success
       if (res.ok || res.status === 302) {
         let data: any = {};
         try { data = JSON.parse(responseText); } catch { /* not JSON */ }
