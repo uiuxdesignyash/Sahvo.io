@@ -1,7 +1,10 @@
 import { NextResponse } from 'next/server';
 
-const SCRIPT_URL = process.env.APPS_SCRIPT_URL!;
-const SCRIPT_SECRET = process.env.APPS_SCRIPT_SECRET!;
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
+const SCRIPT_URL = process.env.APPS_SCRIPT_URL;
+const SCRIPT_SECRET = process.env.APPS_SCRIPT_SECRET;
 
 /* ------------------------------------------------------------------ */
 /*  Rate limiting — max 3 requests per IP per 15 minutes               */
@@ -42,6 +45,14 @@ function isValidEmail(email: string): boolean {
 
 export async function POST(request: Request) {
   try {
+    if (!SCRIPT_URL || !SCRIPT_SECRET) {
+      console.error('[query] Missing env vars:', { url: !!SCRIPT_URL, secret: !!SCRIPT_SECRET });
+      return NextResponse.json(
+        { ok: false, error: 'Server configuration error.' },
+        { status: 500 },
+      );
+    }
+
     const contentLength = request.headers.get('content-length');
     if (contentLength && parseInt(contentLength, 10) > 8192) {
       return NextResponse.json(
@@ -129,7 +140,7 @@ export async function POST(request: Request) {
         });
       }
 
-      console.error('Apps Script error (query):', res.status, responseText.slice(0, 500));
+      console.error('[query] Apps Script error:', res.status, res.statusText, responseText.slice(0, 500));
       return NextResponse.json(
         { ok: false, error: 'Something went wrong. Please try again.' },
         { status: 500 },
@@ -137,16 +148,17 @@ export async function POST(request: Request) {
     } catch (fetchErr: any) {
       clearTimeout(timeout);
       if (fetchErr.name === 'AbortError') {
-        console.error('Apps Script timeout (query)');
+        console.error('[query] Apps Script timeout after 60s');
         return NextResponse.json(
           { ok: false, error: 'Request timed out. Please try again.' },
           { status: 500 },
         );
       }
+      console.error('[query] Fetch failed:', fetchErr?.message, fetchErr?.code);
       throw fetchErr;
     }
-  } catch (error) {
-    console.error('Query API Error:', error);
+  } catch (error: any) {
+    console.error('[query] Unhandled error:', error?.message, error?.stack);
     return NextResponse.json(
       { ok: false, error: 'Something went wrong. Please try again.' },
       { status: 500 },
