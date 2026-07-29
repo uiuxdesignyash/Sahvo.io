@@ -105,7 +105,7 @@ export async function POST(request: Request) {
     const userAgent = request.headers.get('user-agent') || '';
 
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
+    const timeout = setTimeout(() => controller.abort(), 25000);
 
     try {
       const res = await fetch(SCRIPT_URL, {
@@ -120,25 +120,29 @@ export async function POST(request: Request) {
           userAgent,
         }),
         signal: controller.signal,
+        redirect: 'follow',
       });
 
       clearTimeout(timeout);
 
-      if (!res.ok) {
-        const text = await res.text().catch(() => '');
-        console.error('Apps Script error (query):', res.status, text);
-        return NextResponse.json(
-          { ok: false, error: 'Something went wrong. Please try again.' },
-          { status: 500 },
-        );
+      const responseText = await res.text().catch(() => '');
+      console.log('[query] Apps Script response:', res.status, res.url, responseText.slice(0, 500));
+
+      // Apps Script often returns 302 redirect to /dev — treat any 2xx as success
+      if (res.ok || res.status === 302) {
+        let data: any = {};
+        try { data = JSON.parse(responseText); } catch { /* not JSON */ }
+        return NextResponse.json({
+          ok: true,
+          duplicate: data.duplicate === true || false,
+        });
       }
 
-      const data = await res.json().catch(() => ({}));
-
-      return NextResponse.json({
-        ok: true,
-        duplicate: data.duplicate === true || false,
-      });
+      console.error('Apps Script error (query):', res.status, responseText.slice(0, 500));
+      return NextResponse.json(
+        { ok: false, error: 'Something went wrong. Please try again.' },
+        { status: 500 },
+      );
     } catch (fetchErr: any) {
       clearTimeout(timeout);
       if (fetchErr.name === 'AbortError') {
