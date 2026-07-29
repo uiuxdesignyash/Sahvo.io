@@ -312,19 +312,19 @@ export const Hero: React.FC = () => {
           }
           /* Glass card: vertical stack */
           .hero-card {
-            padding: 10px !important;
+            padding: 12px !important;
             border-radius: 14px !important;
           }
           .hero-form {
             flex-direction: column !important;
           }
           .hero-input {
-            height: 48px !important;
+            height: 52px !important;
             font-size: 16px !important;
             width: 100% !important;
           }
           .hero-btn {
-            height: 48px !important;
+            height: 52px !important;
             width: 100% !important;
           }
           /* Social icons: separate row below proof line on mobile */
