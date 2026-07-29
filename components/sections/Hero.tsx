@@ -61,7 +61,7 @@ export const Hero: React.FC = () => {
     <section
       id="top"
       className="hero-root relative w-full overflow-hidden"
-      style={{ height: '56.25vw' /* 16:9 of viewport width — no vertical crop */ }}
+      style={{ height: '100svh', maxHeight: '100svh', overflow: 'hidden' }}
     >
       {/* Background image */}
       <Image
@@ -75,21 +75,17 @@ export const Hero: React.FC = () => {
         style={{ objectPosition: '50% 50%' }}
       />
 
-      {/* Gradient overlay — bottom to top */}
+      {/* Gradient overlay — centred scrim + bottom fade */}
+      <div className="hero-gradient-center absolute inset-0 pointer-events-none" />
       <div className="hero-gradient-bottom absolute inset-0 pointer-events-none" />
 
-      {/* Gradient overlay — left to right (desktop only) */}
-      <div
-        className="hero-gradient-left absolute inset-0 pointer-events-none"
-      />
-
-      {/* Content — anchored to bottom */}
-      <div className="hero-content absolute inset-x-0 bottom-0 z-10">
+      {/* Content — centred, biased downward */}
+      <div className="hero-content absolute left-0 right-0 z-10" style={{ top: '58%', transform: 'translateY(-50%)' }}>
         <div
           className="mx-auto max-w-[1200px]"
-          style={{ paddingLeft: 'max(20px, env(safe-area-inset-left))', paddingRight: 'max(20px, env(safe-area-inset-right))' }}
+          style={{ paddingLeft: 'max(24px, env(safe-area-inset-left))', paddingRight: 'max(24px, env(safe-area-inset-right))' }}
         >
-          <div className="hero-inner grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
+          <div className="hero-inner grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             {/* Left group: headline + proof line */}
             <div className="lg:col-span-7">
               {/* Headline */}
@@ -275,7 +271,7 @@ export const Hero: React.FC = () => {
       {/* Scroll cue — hidden on mobile and short viewports */}
       <div
         className={cn(
-          'absolute bottom-6 left-1/2 -translate-x-1/2 z-10 hero-scroll-cue',
+          'absolute bottom-8 left-1/2 -translate-x-1/2 z-10 hero-scroll-cue',
           !prefersReducedMotion && 'animate-[scrollCue_2s_ease-in-out_infinite]',
         )}
         aria-hidden="true"
@@ -307,40 +303,56 @@ export const Hero: React.FC = () => {
           50%      { transform: translateY(4px); }
         }
 
-        /* Default overlays (≥768) */
-        .hero-gradient-bottom {
+        /* Centred scrim — left-to-right, covers content zone */
+        .hero-gradient-center {
           background: linear-gradient(
-            to top,
+            to right,
             rgba(3, 12, 45, 0.55) 0%,
-            rgba(3, 12, 45, 0.55) 45%,
+            rgba(3, 12, 45, 0.35) 45%,
+            rgba(3, 12, 45, 0.10) 70%,
             transparent 100%
           );
         }
-        .hero-gradient-left {
-          background: linear-gradient(to right, rgba(3,12,45,0.35) 0%, rgba(3,12,45,0.35) 55%, transparent 100%);
+        /* Bottom fade for scroll cue */
+        .hero-gradient-bottom {
+          background: linear-gradient(
+            to top,
+            rgba(3, 12, 45, 0.35) 0%,
+            transparent 25%
+          );
         }
 
-        /* Mobile (<768) */
+        /* Mobile (<768) — stacked flow, no absolute positioning */
         @media (max-width: 767px) {
           .hero-root {
-            min-height: 620px !important;
             height: auto !important;
+            max-height: none !important;
+            min-height: 620px !important;
+            overflow: visible !important;
           }
           .hero-bg {
             object-position: 68% 55% !important;
           }
-          .hero-gradient-bottom {
+          .hero-gradient-center {
             background: linear-gradient(
-              to top,
-              rgba(3, 12, 45, 0.70) 0%,
-              rgba(3, 12, 45, 0.70) 60%,
+              to right,
+              rgba(3, 12, 45, 0.65) 0%,
+              rgba(3, 12, 45, 0.45) 50%,
+              rgba(3, 12, 45, 0.15) 80%,
               transparent 100%
             ) !important;
           }
-          .hero-gradient-left {
-            background: none !important;
+          .hero-gradient-bottom {
+            background: linear-gradient(
+              to top,
+              rgba(3, 12, 45, 0.50) 0%,
+              transparent 30%
+            ) !important;
           }
           .hero-content {
+            position: relative !important;
+            top: auto !important;
+            transform: none !important;
             padding-bottom: 48px;
           }
           /* Type scale */
@@ -377,7 +389,7 @@ export const Hero: React.FC = () => {
             height: 52px !important;
             width: 100% !important;
           }
-          /* Social icons: separate row below proof line on mobile */
+          /* Social icons: hidden on mobile */
           .hero-proof-row {
             display: none !important;
           }
@@ -419,6 +431,7 @@ export const Hero: React.FC = () => {
         @media (max-height: 600px) and (orientation: landscape) {
           .hero-root {
             height: auto !important;
+            max-height: none !important;
             min-height: auto !important;
           }
         }
