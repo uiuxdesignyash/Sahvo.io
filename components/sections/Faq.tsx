@@ -150,7 +150,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
 /*  Query form                                                         */
 /* ------------------------------------------------------------------ */
 
-type FormStatus = 'idle' | 'invalid' | 'submitting' | 'success' | 'error';
+type FormStatus = 'idle' | 'invalid' | 'submitting' | 'success' | 'duplicate' | 'error';
 
 const QueryForm: React.FC = () => {
   const [name, setName] = useState('');
@@ -164,23 +164,33 @@ const QueryForm: React.FC = () => {
     e.preventDefault();
     if (hp) return;
 
-    if (!email.trim() || !email.includes('@') || !question.trim()) {
+    if (!email.trim() || !email.includes('@') || !question.trim() || question.trim().length < 10) {
       setStatus('invalid');
       return;
     }
 
     setStatus('submitting');
     try {
-      const res = await fetch('/api/faq-query', {
+      const res = await fetch('/api/query', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, question }),
+        body: JSON.stringify({ name, email, question, company: hp }),
       });
-      if (res.ok) {
-        setStatus('success');
+
+      const data = await res.json();
+
+      if (res.ok && data.ok) {
+        if (data.duplicate) {
+          setStatus('duplicate');
+        } else {
+          setStatus('success');
+        }
+      } else if (res.status === 429) {
+        setStatus('error');
+        setErrorMsg('Too many requests. Please try again later.');
       } else {
         setStatus('error');
-        setErrorMsg('Something went wrong. Please try again.');
+        setErrorMsg(data.error || 'Something went wrong. Please try again.');
       }
     } catch {
       setStatus('error');
@@ -188,9 +198,9 @@ const QueryForm: React.FC = () => {
     }
   };
 
-  if (status === 'success') {
+  if (status === 'success' || status === 'duplicate') {
     return (
-      <div className="mt-12 rounded-2xl bg-[var(--color-brand-wash)] border border-[var(--color-brand-subtle)] p-8 text-center">
+      <div className="mt-12 rounded-2xl bg-[var(--color-brand-wash)] border border-[var(--color-brand-subtle)] p-8 text-center" aria-live="polite">
         <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-brand-primary)]">
           <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -198,7 +208,9 @@ const QueryForm: React.FC = () => {
         </div>
         <h3 className="text-lg font-bold text-[var(--color-text-primary)]">Got it — thanks!</h3>
         <p className="mt-2 text-sm text-[var(--color-text-secondary)]">
-          We&apos;ll get back to you within 24 hours.
+          {status === 'duplicate'
+            ? "We already have your question on file."
+            : "Question received. We'll reply within 24 hours."}
         </p>
       </div>
     );
@@ -213,17 +225,17 @@ const QueryForm: React.FC = () => {
         Send it over — we reply within 24 hours.
       </p>
 
-      <form onSubmit={handleSubmit} className="mt-6 space-y-4" noValidate>
-        {/* Honeypot */}
+      <form onSubmit={handleSubmit} className="mt-6 space-y-4" noValidate aria-live="polite">
+        {/* Honeypot — visually hidden, not display:none */}
         <input
           type="text"
-          name="website"
+          name="company"
           value={hp}
           onChange={(e) => setHp(e.target.value)}
-          className="hidden"
           tabIndex={-1}
           autoComplete="off"
           aria-hidden="true"
+          className="absolute opacity-0 pointer-events-none h-0 w-0 overflow-hidden"
         />
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -236,7 +248,8 @@ const QueryForm: React.FC = () => {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="h-12 w-full rounded-xl border border-[var(--color-border-interactive)] bg-[var(--color-surface-base)] px-4 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-focus-ring-light)] focus:ring-offset-2"
+              disabled={status === 'submitting'}
+              className="h-12 w-full rounded-xl border border-[var(--color-border-interactive)] bg-[var(--color-surface-base)] px-4 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-focus-ring-light)] focus:ring-offset-2 disabled:opacity-50"
               placeholder="Your name"
             />
           </div>
@@ -250,8 +263,9 @@ const QueryForm: React.FC = () => {
               required
               value={email}
               onChange={(e) => { setEmail(e.target.value); if (status === 'invalid') setStatus('idle'); }}
+              disabled={status === 'submitting'}
               className={cn(
-                'h-12 w-full rounded-xl border bg-[var(--color-surface-base)] px-4 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-focus-ring-light)] focus:ring-offset-2',
+                'h-12 w-full rounded-xl border bg-[var(--color-surface-base)] px-4 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-focus-ring-light)] focus:ring-offset-2 disabled:opacity-50',
                 status === 'invalid' && !email.trim()
                   ? 'border-[var(--color-alert-sos)]'
                   : 'border-[var(--color-border-interactive)]',
@@ -271,8 +285,9 @@ const QueryForm: React.FC = () => {
             rows={4}
             value={question}
             onChange={(e) => { setQuestion(e.target.value); if (status === 'invalid') setStatus('idle'); }}
+            disabled={status === 'submitting'}
             className={cn(
-              'w-full rounded-xl border bg-[var(--color-surface-base)] px-4 py-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-focus-ring-light)] focus:ring-offset-2 resize-none',
+              'w-full rounded-xl border bg-[var(--color-surface-base)] px-4 py-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-focus-ring-light)] focus:ring-offset-2 resize-none disabled:opacity-50',
               status === 'invalid' && !question.trim()
                 ? 'border-[var(--color-alert-sos)]'
                 : 'border-[var(--color-border-interactive)]',
@@ -283,11 +298,11 @@ const QueryForm: React.FC = () => {
 
         {status === 'invalid' && (
           <p className="text-xs font-medium text-[var(--color-alert-sos)]">
-            Please fill in all required fields.
+            Please fill in all required fields. Question must be at least 10 characters.
           </p>
         )}
         {status === 'error' && (
-          <p className="text-xs font-medium text-[var(--color-alert-sos)]">{errorMsg}</p>
+          <p className="text-xs font-medium text-[var(--color-alert-sos)]" role="alert">{errorMsg}</p>
         )}
 
         <Button
@@ -297,8 +312,24 @@ const QueryForm: React.FC = () => {
           disabled={status === 'submitting'}
           className="w-full sm:w-auto"
         >
-          {status === 'submitting' ? 'Sending…' : 'Ask us'}
+          {status === 'submitting' ? (
+            <span className="flex items-center gap-2">
+              <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+              </svg>
+              Sending…
+            </span>
+          ) : 'Ask us'}
         </Button>
+
+        {/* Consent — DPDP Act 2023 */}
+        <p className="text-[11px] text-[var(--color-text-tertiary)]">
+          By submitting you agree to our{' '}
+          <a href="/privacy" className="underline hover:text-[var(--color-text-secondary)] transition-colors duration-150">
+            Privacy Policy
+          </a>.
+        </p>
       </form>
     </div>
   );

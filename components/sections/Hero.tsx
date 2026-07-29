@@ -8,37 +8,52 @@ import Image from 'next/image';
 import React, { useState } from 'react';
 import heroBg from '../hero/Image/Herobg.png';
 
+type FormStatus = 'idle' | 'submitting' | 'success' | 'duplicate' | 'error';
+
 export const Hero: React.FC = () => {
   const [email, setEmail] = useState('');
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [honeypot, setHoneypot] = useState('');
+  const [status, setStatus] = useState<FormStatus>('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const prefersReducedMotion = useReducedMotion();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !email.includes('@')) {
+    if (honeypot) return;
+
+    // Client-side email shape check
+    if (!email || !email.includes('@') || !email.includes('.')) {
       setStatus('error');
       setErrorMessage(COPY.hero.errorState);
       return;
     }
 
-    setStatus('loading');
+    setStatus('submitting');
     try {
-      const res = await fetch('/api/subscribe', {
+      const res = await fetch('/api/waitlist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, source: 'hero' }),
+        body: JSON.stringify({ email, source: 'hero', company: honeypot }),
       });
 
-      if (res.ok) {
-        setStatus('success');
+      const data = await res.json();
+
+      if (res.ok && data.ok) {
+        if (data.duplicate) {
+          setStatus('duplicate');
+        } else {
+          setStatus('success');
+        }
+      } else if (res.status === 429) {
+        setStatus('error');
+        setErrorMessage('Too many requests. Please try again later.');
       } else {
         setStatus('error');
-        setErrorMessage('Something went wrong. Please try again.');
+        setErrorMessage(data.error || 'Something went wrong. Try again, or email sahvo.app@gmail.com');
       }
     } catch {
       setStatus('error');
-      setErrorMessage('Network error. Please try again.');
+      setErrorMessage('Something went wrong. Try again, or email sahvo.app@gmail.com');
     }
   };
 
@@ -156,13 +171,28 @@ export const Hero: React.FC = () => {
                   WebkitBackdropFilter: 'blur(20px) saturate(140%)',
                   border: '1px solid rgba(255,255,255,0.18)',
                 }}
+                aria-live="polite"
               >
-                {status === 'success' ? (
-                  <div className="flex items-center justify-center px-4 rounded-xl bg-white/10 text-white text-sm font-medium" style={{ height: 56 }}>
-                    {COPY.hero.successState}
+                {status === 'success' || status === 'duplicate' ? (
+                  <div className="flex items-center justify-center gap-2 px-4 rounded-xl bg-white/10 text-white text-sm font-medium" style={{ height: 56 }}>
+                    <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                    {status === 'duplicate' ? "You're already on the list." : COPY.hero.successState}
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="hero-form flex flex-col sm:flex-row gap-2">
+                    {/* Honeypot — visually hidden, not display:none */}
+                    <input
+                      type="text"
+                      name="company"
+                      value={honeypot}
+                      onChange={(e) => setHoneypot(e.target.value)}
+                      tabIndex={-1}
+                      autoComplete="off"
+                      aria-hidden="true"
+                      className="absolute opacity-0 pointer-events-none h-0 w-0 overflow-hidden"
+                    />
                     <input
                       type="email"
                       required
@@ -172,11 +202,13 @@ export const Hero: React.FC = () => {
                         if (status === 'error') setStatus('idle');
                       }}
                       placeholder={COPY.hero.inputPlaceholder}
+                      disabled={status === 'submitting'}
                       className={cn(
                         'hero-input flex-1 px-4 rounded-xl min-w-0 text-white outline-none',
                         'bg-transparent border-none',
                         'placeholder:text-white/70',
                         'focus-visible:ring-1 focus-visible:ring-white/45',
+                        'disabled:opacity-50',
                         status === 'error' && 'ring-2 ring-[var(--color-alert-sos)]',
                       )}
                       style={{ fontSize: 15, caretColor: 'white' }}
@@ -186,15 +218,30 @@ export const Hero: React.FC = () => {
                       type="submit"
                       variant="primary"
                       size="md"
-                      disabled={status === 'loading'}
+                      disabled={status === 'submitting'}
                       className="hero-btn px-5 whitespace-nowrap"
                       style={{ height: 56 }}
                     >
-                      {status === 'loading' ? 'Joining...' : COPY.hero.ctaLabel}
+                      {status === 'submitting' ? (
+                        <span className="flex items-center gap-2">
+                          <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                          </svg>
+                          Joining…
+                        </span>
+                      ) : COPY.hero.ctaLabel}
                     </Button>
                   </form>
                 )}
               </div>
+
+              {/* Error message */}
+              {status === 'error' && (
+                <p className="mt-2 text-white/90" style={{ fontSize: 13 }} role="alert">
+                  {errorMessage}
+                </p>
+              )}
 
               {/* Body copy */}
               <p
@@ -207,15 +254,18 @@ export const Hero: React.FC = () => {
                 {COPY.hero.bodyCopy}
               </p>
 
-              {/* Microcopy */}
+              {/* Consent — DPDP Act 2023 */}
               <p
                 className={cn(
-                  'text-white/50 mt-2',
+                  'text-white/50 mt-3',
                   !prefersReducedMotion && 'animate-[heroFadeUp_0.6s_ease-out_0.35s_both]',
                 )}
-                style={{ fontSize: 12 }}
+                style={{ fontSize: 11 }}
               >
-                {COPY.hero.microcopy}
+                By joining you agree to our{' '}
+                <a href="/privacy" className="underline hover:text-white/70 transition-colors duration-150">
+                  Privacy Policy
+                </a>.
               </p>
             </div>
           </div>
