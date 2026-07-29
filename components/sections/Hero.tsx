@@ -61,7 +61,7 @@ export const Hero: React.FC = () => {
     <section
       id="top"
       className="hero-root relative w-full overflow-hidden"
-      style={{ minHeight: 'calc(100svh - 64px)' }}
+      style={{ height: '56.25vw' /* 16:9 of viewport width — no vertical crop */ }}
     >
       {/* Background image */}
       <Image
@@ -410,25 +410,15 @@ export const Hero: React.FC = () => {
 
         /* Desktop ≥1024 */
         @media (min-width: 1024px) {
-          .hero-root {
-            min-height: calc(100svh - 64px) !important;
-            max-height: 880px;
-          }
           .hero-bg {
             object-position: 50% 50% !important;
           }
         }
 
-        /* Ultra-wide: cap height so ratio stays ≤2.1:1 */
-        @media (min-width: 1600px) {
-          .hero-root {
-            max-height: min(880px, calc(100vw / 2.1));
-          }
-        }
-
-        /* Landscape phone: min-height auto */
+        /* Landscape phone: auto height */
         @media (max-height: 600px) and (orientation: landscape) {
           .hero-root {
+            height: auto !important;
             min-height: auto !important;
           }
         }
