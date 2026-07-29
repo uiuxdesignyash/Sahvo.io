@@ -79,8 +79,8 @@ export const Hero: React.FC = () => {
       <div className="hero-gradient-center absolute inset-0 pointer-events-none" />
       <div className="hero-gradient-bottom absolute inset-0 pointer-events-none" />
 
-      {/* Content — centred, biased downward */}
-      <div className="hero-content absolute left-0 right-0 z-10" style={{ top: '58%', transform: 'translateY(-50%)' }}>
+      {/* Content — positioned via CSS: absolute ≥768, static <768 */}
+      <div className="hero-content z-10">
         <div
           className="mx-auto max-w-[1200px]"
           style={{ paddingLeft: 'max(24px, env(safe-area-inset-left))', paddingRight: 'max(24px, env(safe-area-inset-right))' }}
@@ -111,7 +111,7 @@ export const Hero: React.FC = () => {
               {/* Proof line + social icons (desktop ≥768) */}
               <div
                 className={cn(
-                  'hero-proof-row hidden md:flex flex-wrap items-center gap-x-5 gap-y-2 mb-8 lg:mb-0',
+                  'hero-proof-row flex flex-wrap items-center gap-x-5 gap-y-2 lg:mb-0',
                   !prefersReducedMotion && 'animate-[heroFadeUp_0.6s_ease-out_0.1s_both]',
                 )}
               >
@@ -303,6 +303,17 @@ export const Hero: React.FC = () => {
           50%      { transform: translateY(4px); }
         }
 
+        /* Content positioning ≥768: absolute, centred at 58% */
+        @media (min-width: 768px) {
+          .hero-content {
+            position: absolute;
+            top: 58%;
+            left: 0;
+            right: 0;
+            transform: translateY(-50%);
+          }
+        }
+
         /* Centred scrim — left-to-right, covers content zone */
         .hero-gradient-center {
           background: linear-gradient(
@@ -329,6 +340,14 @@ export const Hero: React.FC = () => {
             max-height: none !important;
             min-height: 620px !important;
             overflow: visible !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: flex-end !important;
+            padding: 20px !important;
+            padding-left: max(20px, env(safe-area-inset-left)) !important;
+            padding-right: max(20px, env(safe-area-inset-right)) !important;
+            padding-top: calc(56px + env(safe-area-inset-top)) !important;
+            padding-bottom: calc(48px + env(safe-area-inset-bottom)) !important;
           }
           .hero-bg {
             object-position: 68% 55% !important;
@@ -350,50 +369,72 @@ export const Hero: React.FC = () => {
             ) !important;
           }
           .hero-content {
-            position: relative !important;
+            position: static !important;
             top: auto !important;
             transform: none !important;
-            padding-bottom: 48px;
           }
-          /* Type scale */
+          .hero-content > div {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+          }
+          /* Headline */
           .hero-root h1 {
             font-size: clamp(28px, 8vw, 38px) !important;
             line-height: 1.1 !important;
+            margin-bottom: 16px !important;
           }
-          .hero-root .hero-proof-row + p,
+          /* Proof line: 10px, 16px gap above */
+          .hero-proof-row {
+            margin-top: 16px !important;
+            margin-bottom: 0 !important;
+          }
           .hero-proof-row p {
             font-size: 10px !important;
             letter-spacing: 0.06em !important;
           }
-          .hero-root .lg\\:max-w-\\[420px\\] {
-            max-width: 100% !important;
+          .hero-proof-row span {
+            display: none !important;
           }
-          /* Body copy: 14px on mobile */
-          .hero-root p[style*="font-size: 13px"] {
-            font-size: 14px !important;
+          /* Social icons: 20px, own row */
+          .hero-proof-row a svg {
+            width: 20px !important;
+            height: 20px !important;
           }
-          /* Glass card: vertical stack */
+          .hero-proof-row a + a {
+            margin-left: 16px !important;
+          }
+          /* Glass card: 24px gap above, vertical stack */
           .hero-card {
+            margin-top: 24px !important;
             padding: 12px !important;
             border-radius: 14px !important;
           }
           .hero-form {
             flex-direction: column !important;
+            gap: 8px !important;
           }
           .hero-input {
-            height: 52px !important;
+            height: 48px !important;
             font-size: 16px !important;
             width: 100% !important;
           }
           .hero-btn {
-            height: 52px !important;
+            height: 48px !important;
             width: 100% !important;
           }
-          /* Social icons: hidden on mobile */
-          .hero-proof-row {
-            display: none !important;
+          /* Body copy: 14px, 16px gap above */
+          .hero-root .hero-card ~ p {
+            font-size: 14px !important;
+            margin-top: 16px !important;
           }
-          /* Scroll cue: hidden on mobile */
+          /* Consent: 12px gap above */
+          .hero-root .hero-card ~ p + p {
+            margin-top: 12px !important;
+          }
+          .hero-root .lg\:max-w-\[420px\] {
+            max-width: 100% !important;
+          }
+          /* Scroll cue: hidden */
           .hero-scroll-cue {
             display: none !important;
           }
