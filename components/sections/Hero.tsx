@@ -72,7 +72,7 @@ export const Hero: React.FC = () => {
         fill
         sizes="(max-width: 767px) 1280px, 100vw"
         className="hero-bg object-cover"
-        style={{ objectPosition: '50% 65%' }}
+        style={{ objectPosition: '50% 50%' }}
       />
 
       {/* Gradient overlay — bottom to top */}
@@ -395,7 +395,7 @@ export const Hero: React.FC = () => {
         /* Tablet (768-1023): single column, left-aligned */
         @media (min-width: 768px) and (max-width: 1023px) {
           .hero-bg {
-            object-position: 58% 60% !important;
+            object-position: 58% 55% !important;
           }
           .hero-root h1 {
             font-size: clamp(36px, 6vw, 48px) !important;
@@ -412,9 +412,17 @@ export const Hero: React.FC = () => {
         @media (min-width: 1024px) {
           .hero-root {
             min-height: calc(100svh - 64px) !important;
+            max-height: 880px;
           }
           .hero-bg {
-            object-position: 50% 65% !important;
+            object-position: 50% 50% !important;
+          }
+        }
+
+        /* Ultra-wide: cap height so ratio stays ≤2.1:1 */
+        @media (min-width: 1600px) {
+          .hero-root {
+            max-height: min(880px, calc(100vw / 2.1));
           }
         }
 
