@@ -1,0 +1,351 @@
+▲ Next.js 16.2.12 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://10.144.179.96:3000
+✓ Ready in 1084ms
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of C:\Users\YASH KUMAR\package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * C:\Users\YASH KUMAR\Claude\Projects\Sahvo Website Dev\package-lock.json
+
+
+ GET / 200 in 1358ms (next.js: 389ms, application-code: 970ms)
+ GET / 200 in 434ms (next.js: 49ms, application-code: 385ms)
+[browser] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.tsx">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <script>
+                      <script>
+                      <RootLayout>
+                        <html
+                          lang="en"
+                          className="figtree_734041c4-module__7oqW7W__variable jetbrains_mono_3cc65533-module__Wp56sW_..."
+-                         crxlauncher=""
+                        >
+                          <head>
+                          ...
+                            <Home>
+                              <main className="min-h-scre...">
+                                ...
+                                  <div className="mx-auto fl...">
+                                    <a>
+                                    <nav>
+                                    <div className="hidden md:...">
+                                      <_c size="sm" variant="primary" className="!rounded-f..." ...>
+                                        <button
+                                          ref={null}
+                                          disabled={undefined}
+                                          className="inline-flex items-center justify-center rounded-[12px] transition..."
+                                          onClick={function onClick}
+-                                         fdprocessedid="f7mpvj"
+                                        >
+                                    ...
+                                ...
+                                  <div className="jsx-dec5a8...">
+                                    <div style={{...}} className="jsx-dec5a8...">
+                                      <form onSubmit={function handleSubmit} className="jsx-dec5a8...">
+                                        <input
+                                          type="email"
+                                          required={true}
+                                          value=""
+                                          onChange={function onChange}
+                                          placeholder="you@example.com"
+                                          style={{fontSize:15,caretColor:"white"}}
+                                          aria-label="Email address"
+                                          className="jsx-dec5a852dab68d9e flex-1 h-12 sm:h-14 px-4 rounded-xl min-w-0 ..."
+-                                         fdprocessedid="sluyl"
+                                        >
+                                        <_c type="submit" variant="primary" size="md" disabled={false} ...>
+                                          <button
+                                            ref={null}
+                                            disabled={false}
+                                            className="inline-flex items-center justify-center rounded-[12px] transiti..."
+                                            type="submit"
+-                                           fdprocessedid="ifecz"
+                                          >
+                                    ...
+                                <section>
+                                <section>
+                                ...
+                                  <div className="mx-auto w-...">
+                                    <SectionHeading>
+                                    <div className="hidden lg:...">
+                                      <div className="col-span-4...">
+                                        <button
+                                          type="button"
+                                          onClick={function onClick}
+                                          className="w-full text-left p-4 rounded-[14px] transition-all flex items-cen..."
+-                                         fdprocessedid="juz1w"
+                                        >
+                                        <button
+                                          type="button"
+                                          onClick={function onClick}
+                                          className="w-full text-left p-4 rounded-[14px] transition-all flex items-cen..."
+-                                         fdprocessedid="7vk44j"
+                                        >
+                                        <button
+                                          type="button"
+                                          onClick={function onClick}
+                                          className="w-full text-left p-4 rounded-[14px] transition-all flex items-cen..."
+-                                         fdprocessedid="2v4p6"
+                                        >
+                                        <button
+                                          type="button"
+                                          onClick={function onClick}
+                                          className="w-full text-left p-4 rounded-[14px] transition-all flex items-cen..."
+-                                         fdprocessedid="p2ofij"
+                                        >
+                                        <button
+                                          type="button"
+                                          onClick={function onClick}
+                                          className="w-full text-left p-4 rounded-[14px] transition-all flex items-cen..."
+-                                         fdprocessedid="lr6ixl"
+                                        >
+                                      <div className="col-span-8...">
+                                        <div>
+                                        <div className="pt-2">
+                                          <_c variant="sos" size="md">
+                                            <button
+                                              ref={null}
+                                              disabled={undefined}
+                                              className="inline-flex items-center justify-center rounded-[12px] transi..."
+-                                             fdprocessedid="tjktfc"
+                                            >
+                                        ...
+                                    ...
+                                <section>
+                                ...
+                                  <div className="mx-auto w-...">
+                                    <SectionHeading>
+                                    <div className="flex justi...">
+                                      <div role="tablist" aria-label="Market Dat..." className="inline-fle...">
+                                        <button
+                                          role="tab"
+                                          aria-selected={true}
+                                          onClick={function onClick}
+                                          className="px-5 py-2 rounded-full text-xs md:text-sm font-bold transition-al..."
+-                                         fdprocessedid="6ksz5s"
+                                        >
++                                         Inbound
+                                        <button
+                                          role="tab"
+                                          aria-selected={false}
+                                          onClick={function onClick}
+                                          className="px-5 py-2 rounded-full text-xs md:text-sm font-bold transition-al..."
+-                                         fdprocessedid="tavad"
+                                        >
++                                         Domestic
+                                        <button
+                                          role="tab"
+                                          aria-selected={false}
+                                          onClick={function onClick}
+                                          className="px-5 py-2 rounded-full text-xs md:text-sm font-bold transition-al..."
+-                                         fdprocessedid="j3pb1"
+                                        >
++                                         Pilot city
+                                    ...
+                                <section>
+                                ...
+                                  <div className="rounded-[2...">
+                                    <div className="grid grid-...">
+                                      <div className="lg:sticky ...">
+                                        <div>
+                                        <h2>
+                                        <div className="mt-10">
+                                          <p>
+                                          <p>
+                                          <_c variant="secondary" size="sm" className="mt-4" ...>
+                                            <button
+                                              ref={null}
+                                              disabled={undefined}
+                                              className="inline-flex items-center justify-center rounded-[12px] transi..."
+                                              onClick={function Faq.useCallback[scrollToForm]}
+-                                             fdprocessedid="2hhobjq"
+                                            >
+                                      <div className="flex flex-...">
+                                        <AccordionItem index={0} question={"Why can'..."} answer={"Those to..."} ...>
+                                          <div className="rounded-xl...">
+                                            <h3>
+                                              <button
+                                                id="faq-q-0"
+                                                aria-expanded={true}
+                                                aria-controls="faq-a-0"
+                                                onClick={function onToggle}
+                                                className="flex w-full items-center gap-4 px-5 py-4 text-left min-h-[5..."
+-                                               fdprocessedid="knw2is"
+                                              >
+                                            ...
+                                        <AccordionItem index={1} question="Why launch..." answer="Jaipur is ..." ...>
+                                          <div className="rounded-xl...">
+                                            <h3>
+                                              <button
+                                                id="faq-q-1"
+                                                aria-expanded={false}
+                                                aria-controls="faq-a-1"
+                                                onClick={function onToggle}
+                                                className="flex w-full items-center gap-4 px-5 py-4 text-left min-h-[5..."
+-                                               fdprocessedid="pzm74"
+                                              >
+                                            ...
+                                        <AccordionItem index={2} question="What ships..." answer="Five featu..." ...>
+                                          <div className="rounded-xl...">
+                                            <h3>
+                                              <button
+                                                id="faq-q-2"
+                                                aria-expanded={false}
+                                                aria-controls="faq-a-2"
+                                                onClick={function onToggle}
+                                                className="flex w-full items-center gap-4 px-5 py-4 text-left min-h-[5..."
+-                                               fdprocessedid="kexdr"
+                                              >
+                                            ...
+                                        <AccordionItem index={3} question="Will the a..." answer={"We're st..."} ...>
+                                          <div className="rounded-xl...">
+                                            <h3>
+                                              <button
+                                                id="faq-q-3"
+                                                aria-expanded={false}
+                                                aria-controls="faq-a-3"
+                                                onClick={function onToggle}
+                                                className="flex w-full items-center gap-4 px-5 py-4 text-left min-h-[5..."
+-                                               fdprocessedid="e2z4sb"
+                                              >
+                                            ...
+                                        <AccordionItem index={4} question="How will s..." answer="Being work..." ...>
+                                          <div className="rounded-xl...">
+                                            <h3>
+                                              <button
+                                                id="faq-q-4"
+                                                aria-expanded={false}
+                                                aria-controls="faq-a-4"
+                                                onClick={function onToggle}
+                                                className="flex w-full items-center gap-4 px-5 py-4 text-left min-h-[5..."
+-                                               fdprocessedid="yiwvga"
+                                              >
+                                            ...
+                                    ...
+                                      <div className="mt-12">
+                                        <h3>
+                                        <p>
+                                        <form onSubmit={function handleSubmit} className="mt-6 space..." ...>
+                                          <input>
+                                          <div className="grid grid-...">
+                                            <div>
+                                              <label>
+                                              <input
+                                                id="faq-name"
+                                                type="text"
+                                                value=""
+                                                onChange={function onChange}
+                                                className="h-12 w-full rounded-xl border border-[var(--color-border-in..."
+                                                placeholder="Your name"
+-                                               fdprocessedid="u0uqbj"
+                                              >
+                                            <div>
+                                              <label>
+                                              <input
+                                                id="faq-email"
+                                                type="email"
+                                                required={true}
+                                                value=""
+                                                onChange={function onChange}
+                                                className="h-12 w-full rounded-xl border bg-[var(--color-surface-base)..."
+                                                placeholder="you@example.com"
+-                                               fdprocessedid="m7holr"
+                                              >
+                                          <div>
+                                          <_c type="submit" size="lg" variant="primary" disabled={false} ...>
+                                            <button
+                                              ref={null}
+                                              disabled={false}
+                                              className="inline-flex items-center justify-center rounded-[12px] transi..."
+                                              type="submit"
+-                                             fdprocessedid="od523p"
+                                            >
+                                ...
+                                  <div className="grid grid-...">
+                                    <div className="p-8 md:p-1...">
+                                      <div>
+                                      <form onSubmit={function handleSubmit} className="space-y-3">
+                                        <Input label="Email address" placeholder="you@exampl..." type="email" value="" ...>
+                                          <div className="w-full tex...">
+                                            <label>
+                                            <div className="relative">
+                                              <input
+                                                ref={null}
+                                                id="_R_cqinelb_"
+                                                aria-invalid={false}
+                                                aria-describedby={undefined}
+                                                className="w-full h-[52px] px-4 rounded-[12px] text-base transition-co..."
+                                                placeholder="you@example.com"
+                                                type="email"
+                                                value=""
+                                                onChange={function onChange}
+-                                               fdprocessedid="aza18"
+                                              >
+                                        <_c type="submit" size="lg" variant="primary" className="w-full" disabled={false}>
+                                          <button
+                                            ref={null}
+                                            disabled={false}
+                                            className="inline-flex items-center justify-center rounded-[12px] transiti..."
+                                            type="submit"
+-                                           fdprocessedid="youh7n"
+                                          >
+                                        ...
+                                    <div className="p-8 md:p-1...">
+                                      <div>
+                                      <div className="space-y-3 ...">
+                                        <a href="mailto:sah..." className="block w-full">
+                                          <_c size="lg" variant="secondary" className="w-full tex...">
+                                            <button
+                                              ref={null}
+                                              disabled={undefined}
+                                              className="inline-flex items-center justify-center rounded-[12px] transi..."
+-                                             fdprocessedid="3yb5qq"
+                                            >
+                                        ...
+                                ...
+                  ...
+ 
+    at <unknown> (file://C:/Users/YASH KUMAR/Claude/Projects/Sahvo Website Dev/.next/dev/static/chunks/0eix_next_dist_compiled_react-dom_05f6t8y._.js:3439:25)
+    at runWithFiberInDEV (file://C:/Users/YASH KUMAR/Claude/Projects/Sahvo Website Dev/.next/dev/static/chunks/0eix_next_dist_compiled_react-dom_05f6t8y._.js:965:74)
+    at emitPendingHydrationWarnings (file://C:/Users/YASH KUMAR/Claude/Projects/Sahvo Website Dev/.next/dev/static/chunks/0eix_next_dist_compiled_react-dom_05f6t8y._.js:3438:13)
+    at completeWork (file://C:/Users/YASH KUMAR/Claude/Projects/Sahvo Website Dev/.next/dev/static/chunks/0eix_next_dist_compiled_react-dom_05f6t8y._.js:6885:102)
+    at runWithFiberInDEV (file://C:/Users/YASH KUMAR/Claude/Projects/Sahvo Website Dev/.next/dev/static/chunks/0eix_next_dist_compiled_react-dom_05f6t8y._.js:965:131)
+    at completeUnitOfWork (file://C:/Users/YASH KUMAR/Claude/Projects/Sahvo Website Dev/.next/dev/static/chunks/0eix_next_dist_compiled_react-dom_05f6t8y._.js:9622:23)
+    at performUnitOfWork (file://C:/Users/YASH KUMAR/Claude/Projects/Sahvo Website Dev/.next/dev/static/chunks/0eix_next_dist_compiled_react-dom_05f6t8y._.js:9557:28)
+    at workLoopConcurrentByScheduler (file://C:/Users/YASH KUMAR/Claude/Projects/Sahvo Website Dev/.next/dev/static/chunks/0eix_next_dist_compiled_react-dom_05f6t8y._.js:9551:58)
+    at renderRootConcurrent (file://C:/Users/YASH KUMAR/Claude/Projects/Sahvo Website Dev/.next/dev/static/chunks/0eix_next_dist_compiled_react-dom_05f6t8y._.js:9534:71)
+    at performWorkOnRoot (file://C:/Users/YASH KUMAR/Claude/Projects/Sahvo Website Dev/.next/dev/static/chunks/0eix_next_dist_compiled_react-dom_05f6t8y._.js:9061:150)
+    at performWorkOnRootViaSchedulerTask (file://C:/Users/YASH KUMAR/Claude/Projects/Sahvo Website Dev/.next/dev/static/chunks/0eix_next_dist_compiled_react-dom_05f6t8y._.js:10255:9)
+    at performWorkUntilDeadline (file://C:/Users/YASH KUMAR/Claude/Projects/Sahvo Website Dev/.next/dev/static/chunks/0eix_next_dist_compiled_1ii1mww._.js:2647:64)
+    at <unknown> (chrome-extension://kiilhncajadbgbmdbdcopdpnmdhlbdle/assets/js/content.js:13:96450)
+    at d (chrome-extension://kiilhncajadbgbmdbdcopdpnmdhlbdle/assets/js/content.js:13:96560)
+    at f (chrome-extension://kiilhncajadbgbmdbdcopdpnmdhlbdle/assets/js/content.js:13:96661) (file://C:/Users/YASH KUMAR/Claude/Projects/Sahvo Website Dev/.next/dev/static/chunks/0eix_next_dist_compiled_react-dom_05f6t8y._.js:3439:25)
+[browser] Image with src "/_next/static/media/Primary_logo1.1_crs7dqix39z.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio. (file://C:/Users/YASH KUMAR/Claude/Projects/Sahvo Website Dev/.next/dev/static/chunks/0eix_next_dist_167ohxl._.js:2489:13)
+[browser] Image with src "/logo.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio. (file://C:/Users/YASH KUMAR/Claude/Projects/Sahvo Website Dev/.next/dev/static/chunks/0eix_next_dist_167ohxl._.js:2489:13)

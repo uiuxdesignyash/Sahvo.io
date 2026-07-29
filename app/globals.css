@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-primary: #1A54DA;
+  --color-brand-hover: #1544B4;
+  --color-brand-pressed: #10358E;
+  --color-brand-subtle: #D9E3FB;
+  --color-brand-wash: #F2F6FE;
+  --color-brand-on-dark: #8AADF6;
+
+  --color-surface-base: #FFFFFF;
+  --color-surface-sunken: #F5F7FA;
+  --color-surface-inverse: #0B1220;
+  --color-surface-inverse-raised: #131C31;
+
+  --color-text-primary: #0E1526;
+  --color-text-secondary: #4A5468;
+  --color-text-tertiary: #656E7C;
+
+  --color-border-default: #E2E6EE;
+  --color-border-strong: #C6CCD8;
+  --color-border-interactive: #7E8798;
+  --color-border-interactive-on-dark: #5F72A6;
+
+  --color-alert-sos: #D6202B;
+  --color-alert-sos-pressed: #B3161F;
+  --color-alert-sos-on-wash: #B3161F;
+  --color-alert-sos-wash: #FDECEC;
+  --color-alert-sos-on-dark: #FF8A8F;
+
+  --color-focus-ring-light: #1A54DA;
+  --color-focus-ring-dark: #8AADF6;
+
+  --font-sans: var(--font-figtree), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  --font-deva: var(--font-noto-deva), sans-serif;
+
+  --radius-control: 12px;
+  --radius-chip: 10px;
+  --radius-card: 20px;
+  --radius-card-lg: 22px;
+
+  --ease-standard: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-entrance: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+}
+
+:root {
+  --font-figtree: 'Figtree', system-ui, sans-serif;
+  --font-jetbrains: 'JetBrains Mono', monospace;
+  --font-noto-deva: 'Noto Sans Devanagari', sans-serif;
+}
+
+body {
+  background-color: transparent;
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+:lang(hi) {
+  font-family: var(--font-deva);
+  line-height: 1.75;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus-ring-light);
+  outline-offset: 2px;
+}
+
+.on-dark :focus-visible {
+  outline-color: var(--color-focus-ring-dark);
+}
+
+/* Lenis smooth scroll */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
