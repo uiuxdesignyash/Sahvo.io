@@ -3,61 +3,28 @@
 import { Button } from '@/components/ui/Button';
 import { COPY } from '@/content/copy';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { useWaitlistForm } from '@/hooks/useWaitlistForm';
 import { cn } from '@/lib/cn';
-import { isValidEmail } from '@/lib/validateEmail';
 import Image from 'next/image';
 import React, { useState } from 'react';
 import heroBg from '../hero/Image/Herobg.png';
 
-type FormStatus = 'idle' | 'submitting' | 'success' | 'duplicate' | 'error';
-
 export const Hero: React.FC = () => {
-  const [email, setEmail] = useState('');
   const [honeypot, setHoneypot] = useState('');
-  const [status, setStatus] = useState<FormStatus>('idle');
-  const [errorMessage, setErrorMessage] = useState('');
   const prefersReducedMotion = useReducedMotion();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    email,
+    status,
+    errorMessage,
+    handleSubmit: baseHandleSubmit,
+    handleBlur,
+    handleChange,
+  } = useWaitlistForm({ source: 'hero', honeypot });
+
+  const handleSubmit = (e: React.FormEvent) => {
     if (honeypot) return;
-
-    const trimmed = email.trim();
-    if (trimmed !== email) setEmail(trimmed);
-
-    if (!isValidEmail(trimmed)) {
-      setStatus('error');
-      setErrorMessage(COPY.hero.errorState);
-      return;
-    }
-
-    setStatus('submitting');
-    try {
-      const res = await fetch('/api/waitlist', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, source: 'hero', company: honeypot }),
-      });
-
-      const data = await res.json();
-
-      if (res.ok && data.ok) {
-        if (data.duplicate) {
-          setStatus('duplicate');
-        } else {
-          setStatus('success');
-        }
-      } else if (res.status === 429) {
-        setStatus('error');
-        setErrorMessage('Too many requests. Please try again later.');
-      } else {
-        setStatus('error');
-        setErrorMessage(data.error || 'Something went wrong. Try again, or email sahvo.app@gmail.com');
-      }
-    } catch {
-      setStatus('error');
-      setErrorMessage('Something went wrong. Try again, or email sahvo.app@gmail.com');
-    }
+    baseHandleSubmit(e);
   };
 
   return (
@@ -196,19 +163,8 @@ export const Hero: React.FC = () => {
                       type="email"
                       required
                       value={email}
-                      onChange={(e) => {
-                        setEmail(e.target.value);
-                        if (status === 'error' && isValidEmail(e.target.value.trim())) {
-                          setStatus('idle');
-                          setErrorMessage('');
-                        }
-                      }}
-                      onBlur={() => {
-                        if (email && !isValidEmail(email.trim())) {
-                          setStatus('error');
-                          setErrorMessage(COPY.hero.errorState);
-                        }
-                      }}
+                      onChange={(e) => handleChange(e.target.value)}
+                      onBlur={handleBlur}
                       placeholder={COPY.hero.inputPlaceholder}
                       disabled={status === 'submitting'}
                       className={cn(

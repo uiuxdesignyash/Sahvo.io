@@ -4,39 +4,18 @@ import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 import { Input } from '@/components/ui/Input';
 import { COPY } from '@/content/copy';
-import { isValidEmail } from '@/lib/validateEmail';
-import React, { useState } from 'react';
+import { useWaitlistForm } from '@/hooks/useWaitlistForm';
+import React from 'react';
 
 export const Cta: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const trimmed = email.trim();
-    if (trimmed !== email) setEmail(trimmed);
-
-    if (!isValidEmail(trimmed)) {
-      setStatus('error');
-      return;
-    }
-
-    setStatus('loading');
-    try {
-      const res = await fetch('/api/waitlist', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: trimmed, source: 'cta_footer' }),
-      });
-      if (res.ok) {
-        setStatus('success');
-      } else {
-        setStatus('error');
-      }
-    } catch {
-      setStatus('error');
-    }
-  };
+  const {
+    email,
+    status,
+    errorMessage,
+    handleSubmit,
+    handleBlur,
+    handleChange,
+  } = useWaitlistForm({ source: 'cta' });
 
   return (
     <section id="cta" className="py-20 md:py-28 bg-[var(--color-surface-base)]">
@@ -57,8 +36,18 @@ export const Cta: React.FC = () => {
             </div>
 
             {status === 'success' ? (
-              <div className="p-4 rounded-xl bg-emerald-50 text-emerald-900 text-sm font-semibold">
-                You're on the list for the Jaipur pilot!
+              <div className="flex items-center gap-2 p-4 rounded-xl bg-emerald-50 text-emerald-900 text-sm font-semibold">
+                <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                You&apos;re on the list for the Jaipur pilot!
+              </div>
+            ) : status === 'duplicate' ? (
+              <div className="flex items-center gap-2 p-4 rounded-xl bg-amber-50 text-amber-900 text-sm font-semibold">
+                <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                </svg>
+                You&apos;re already on the list.
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-3">
@@ -67,21 +56,12 @@ export const Cta: React.FC = () => {
                   placeholder={COPY.cta.left.inputPlaceholder}
                   type="email"
                   value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    if (status === 'error' && isValidEmail(e.target.value.trim())) {
-                      setStatus('idle');
-                    }
-                  }}
-                  onBlur={() => {
-                    if (email && !isValidEmail(email.trim())) {
-                      setStatus('error');
-                    }
-                  }}
-                  error={status === 'error' ? 'Please enter a valid email address' : undefined}
+                  onChange={(e) => handleChange(e.target.value)}
+                  onBlur={handleBlur}
+                  error={status === 'error' ? errorMessage : undefined}
                 />
-                <Button type="submit" size="lg" variant="primary" className="w-full" disabled={status === 'loading'}>
-                  {status === 'loading' ? 'Joining...' : COPY.cta.left.button}
+                <Button type="submit" size="lg" variant="primary" className="w-full" disabled={status === 'submitting'}>
+                  {status === 'submitting' ? 'Joining...' : COPY.cta.left.button}
                 </Button>
                 <p className="text-xs text-[var(--color-text-tertiary)]">
                   {COPY.cta.left.microcopy}
