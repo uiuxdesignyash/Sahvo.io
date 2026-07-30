@@ -5,17 +5,23 @@ import { Container } from '@/components/ui/Container';
 import { Input } from '@/components/ui/Input';
 import { COPY } from '@/content/copy';
 import { useWaitlistForm } from '@/hooks/useWaitlistForm';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export const Cta: React.FC = () => {
+  const [honeypot, setHoneypot] = useState('');
   const {
     email,
     status,
     errorMessage,
-    handleSubmit,
+    handleSubmit: baseHandleSubmit,
     handleBlur,
     handleChange,
-  } = useWaitlistForm({ source: 'cta' });
+  } = useWaitlistForm({ source: 'cta', honeypot });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    if (honeypot) return;
+    baseHandleSubmit(e);
+  };
 
   useEffect(() => {
     if (status === 'success' && typeof window.gtag === 'function') {
@@ -57,6 +63,16 @@ export const Cta: React.FC = () => {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-3">
+                <input
+                  type="text"
+                  name="company"
+                  value={honeypot}
+                  onChange={(e) => setHoneypot(e.target.value)}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  className="absolute opacity-0 pointer-events-none h-0 w-0 overflow-hidden"
+                />
                 <Input
                   label={COPY.cta.left.inputLabel}
                   placeholder={COPY.cta.left.inputPlaceholder}

@@ -160,6 +160,7 @@ const QueryForm: React.FC = () => {
   const [hp, setHp] = useState('');
   const [status, setStatus] = useState<FormStatus>('idle');
   const [errorMsg, setErrorMsg] = useState('');
+  const mountedAt = useRef(Date.now());
 
   useEffect(() => {
     if (status === 'success' && typeof window.gtag === 'function') {
@@ -181,7 +182,7 @@ const QueryForm: React.FC = () => {
       const res = await fetch('/api/query', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, question, company: hp }),
+        body: JSON.stringify({ name, email, question, company: hp, mountedAt: mountedAt.current }),
       });
 
       const data = await res.json();

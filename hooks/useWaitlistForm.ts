@@ -2,7 +2,7 @@
 
 import { COPY } from '@/content/copy';
 import { isValidEmail } from '@/lib/validateEmail';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 export type WaitlistStatus = 'idle' | 'submitting' | 'success' | 'duplicate' | 'error';
 
@@ -15,6 +15,7 @@ export function useWaitlistForm({ source, honeypot = '' }: UseWaitlistFormOption
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<WaitlistStatus>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const mountedAt = useRef(Date.now());
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +35,7 @@ export function useWaitlistForm({ source, honeypot = '' }: UseWaitlistFormOption
       const res = await fetch('/api/waitlist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: trimmed, source, company: honeypot }),
+        body: JSON.stringify({ email: trimmed, source, company: honeypot, mountedAt: mountedAt.current }),
       });
 
       const data = await res.json();

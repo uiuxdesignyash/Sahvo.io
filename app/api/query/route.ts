@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { isValidEmail } from '@/lib/validateEmail';
+import { validateRequestShape, isHumanDelay } from '@/lib/validateRequest';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -44,18 +45,17 @@ export async function POST(request: Request) {
       );
     }
 
-    const contentLength = request.headers.get('content-length');
-    if (contentLength && parseInt(contentLength, 10) > 8192) {
-      return NextResponse.json(
-        { ok: false, error: 'Request too large.' },
-        { status: 400 },
-      );
-    }
+    const shape = validateRequestShape(request, 8192);
+    if (!shape.ok) return shape.response;
 
     const body = await request.json();
-    const { name, email, question, company } = body;
+    const { name, email, question, company, mountedAt } = body;
 
     if (company) {
+      return NextResponse.json({ ok: true }, { status: 200 });
+    }
+
+    if (!isHumanDelay(mountedAt)) {
       return NextResponse.json({ ok: true }, { status: 200 });
     }
 
