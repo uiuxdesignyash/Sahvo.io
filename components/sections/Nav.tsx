@@ -279,7 +279,7 @@ export const Nav: React.FC = () => {
                   aria-current={active === i ? 'page' : undefined}
                   onClick={(e) => handleLinkClick(e, link.href)}
                   className={cn(
-                    'relative z-10 rounded-full px-4 text-[15px] font-medium leading-none transition-colors duration-200',
+                    'relative z-10 rounded-full px-[13px] text-[15px] font-medium leading-none transition-colors duration-200',
                     'focus-visible:outline-2 focus-visible:outline-[var(--color-focus-ring-light)] focus-visible:outline-offset-2',
                     'min-h-[44px] flex items-center',
                     active === i

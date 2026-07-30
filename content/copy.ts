@@ -9,6 +9,7 @@ export const COPY = {
       { label: "What we're building", href: '#features' },
       { label: "Who it's for", href: '#segments' },
       { label: 'Roadmap', href: '#roadmap' },
+      { label: 'FAQ', href: '#faq' },
     ],
     cta: 'Get early access',
     mobileMenuOpen: 'Open menu',
