@@ -379,15 +379,15 @@ export const Hero: React.FC = () => {
           }
           .hero-form {
             flex-direction: column !important;
-            gap: 8px !important;
+            gap: 10px !important;
           }
           .hero-input {
-            height: 48px !important;
+            height: 52px !important;
             font-size: 16px !important;
             width: 100% !important;
           }
           .hero-btn {
-            height: 48px !important;
+            height: 52px !important;
             width: 100% !important;
           }
           /* Body copy: 14px, 16px gap above */
@@ -445,10 +445,10 @@ export const Hero: React.FC = () => {
           }
         }
 
-        /* Autofill guard */
-        input:-webkit-autofill,
-        input:-webkit-autofill:hover,
-        input:-webkit-autofill:focus {
+        /* Autofill guard — hero glass card only */
+        .hero-root input:-webkit-autofill,
+        .hero-root input:-webkit-autofill:hover,
+        .hero-root input:-webkit-autofill:focus {
           -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
           -webkit-text-fill-color: #fff !important;
           transition: background-color 5000s ease-in-out 0s;
