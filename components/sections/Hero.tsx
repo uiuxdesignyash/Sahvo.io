@@ -382,12 +382,14 @@ export const Hero: React.FC = () => {
             gap: 12px !important;
           }
           .hero-input {
-            height: 56px !important;
+            height: 60px !important;
             font-size: 16px !important;
             width: 100% !important;
+            padding: 0 18px !important;
+            border-radius: 12px !important;
           }
           .hero-btn {
-            height: 56px !important;
+            height: 60px !important;
             width: 100% !important;
           }
           /* Body copy: 14px, 16px gap above */
