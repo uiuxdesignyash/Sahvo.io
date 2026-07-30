@@ -161,6 +161,12 @@ const QueryForm: React.FC = () => {
   const [status, setStatus] = useState<FormStatus>('idle');
   const [errorMsg, setErrorMsg] = useState('');
 
+  useEffect(() => {
+    if (status === 'success' && typeof window.gtag === 'function') {
+      window.gtag('event', 'question_submitted');
+    }
+  }, [status]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (hp) return;

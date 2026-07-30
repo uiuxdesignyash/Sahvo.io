@@ -5,7 +5,7 @@ import { Container } from '@/components/ui/Container';
 import { Input } from '@/components/ui/Input';
 import { COPY } from '@/content/copy';
 import { useWaitlistForm } from '@/hooks/useWaitlistForm';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 export const Cta: React.FC = () => {
   const {
@@ -16,6 +16,12 @@ export const Cta: React.FC = () => {
     handleBlur,
     handleChange,
   } = useWaitlistForm({ source: 'cta' });
+
+  useEffect(() => {
+    if (status === 'success' && typeof window.gtag === 'function') {
+      window.gtag('event', 'waitlist_signup', { source: 'cta' });
+    }
+  }, [status]);
 
   return (
     <section id="cta" className="py-20 md:py-28 bg-[var(--color-surface-base)]">

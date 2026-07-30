@@ -1,5 +1,6 @@
 import { figtree, jetbrains, notoDeva } from '@/app/fonts';
 import '@/app/globals.css';
+import { Analytics } from '@/components/Analytics';
 import { SmoothScroll } from '@/components/motion/SmoothScroll';
 import { SITE_URL } from '@/lib/site';
 import { COPY } from '@/content/copy';
@@ -45,6 +46,9 @@ export const metadata: Metadata = {
     images: ['/og-image.png'],
   },
   robots: { index: true, follow: true },
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION,
+  },
 };
 
 export const viewport: Viewport = {
@@ -96,6 +100,7 @@ export default function RootLayout({
       </head>
       <body className="antialiased selection:bg-[var(--color-brand-subtle)] selection:text-[var(--color-brand-primary)]">
         <SmoothScroll>{children}</SmoothScroll>
+        <Analytics />
       </body>
     </html>
   );

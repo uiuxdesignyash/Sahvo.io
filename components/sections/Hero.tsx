@@ -6,7 +6,7 @@ import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useWaitlistForm } from '@/hooks/useWaitlistForm';
 import { cn } from '@/lib/cn';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import heroBg from '../hero/Image/Herobg.png';
 
 export const Hero: React.FC = () => {
@@ -26,6 +26,12 @@ export const Hero: React.FC = () => {
     if (honeypot) return;
     baseHandleSubmit(e);
   };
+
+  useEffect(() => {
+    if (status === 'success' && typeof window.gtag === 'function') {
+      window.gtag('event', 'waitlist_signup', { source: 'hero' });
+    }
+  }, [status]);
 
   return (
     <section
