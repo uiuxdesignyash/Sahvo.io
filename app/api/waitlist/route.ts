@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { isValidEmail } from '@/lib/validateEmail';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -27,16 +28,6 @@ function checkRateLimit(ip: string): boolean {
 
   entry.count++;
   return true;
-}
-
-/* ------------------------------------------------------------------ */
-/*  Email validation                                                   */
-/* ------------------------------------------------------------------ */
-
-function isValidEmail(email: string): boolean {
-  if (!email || typeof email !== 'string') return false;
-  if (email.length > 254) return false;
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
 /* ------------------------------------------------------------------ */

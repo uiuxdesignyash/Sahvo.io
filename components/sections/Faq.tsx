@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { cn } from '@/lib/cn';
+import { isValidEmail } from '@/lib/validateEmail';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 const FAQ_ITEMS = [
@@ -164,7 +165,7 @@ const QueryForm: React.FC = () => {
     e.preventDefault();
     if (hp) return;
 
-    if (!email.trim() || !email.includes('@') || !question.trim() || question.trim().length < 10) {
+    if (!isValidEmail(email) || !question.trim() || question.trim().length < 10) {
       setStatus('invalid');
       return;
     }
@@ -262,7 +263,17 @@ const QueryForm: React.FC = () => {
               type="email"
               required
               value={email}
-              onChange={(e) => { setEmail(e.target.value); if (status === 'invalid') setStatus('idle'); }}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (status === 'invalid' && isValidEmail(e.target.value.trim())) {
+                  setStatus('idle');
+                }
+              }}
+              onBlur={() => {
+                if (email && !isValidEmail(email.trim())) {
+                  setStatus('invalid');
+                }
+              }}
               disabled={status === 'submitting'}
               className={cn(
                 'h-12 w-full rounded-xl border bg-[var(--color-surface-base)] px-4 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-focus-ring-light)] focus:ring-offset-2 disabled:opacity-50',

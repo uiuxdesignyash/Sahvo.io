@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 import { Input } from '@/components/ui/Input';
 import { COPY } from '@/content/copy';
+import { isValidEmail } from '@/lib/validateEmail';
 import React, { useState } from 'react';
 
 export const Cta: React.FC = () => {
@@ -12,17 +13,20 @@ export const Cta: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !email.includes('@')) {
+    const trimmed = email.trim();
+    if (trimmed !== email) setEmail(trimmed);
+
+    if (!isValidEmail(trimmed)) {
       setStatus('error');
       return;
     }
 
     setStatus('loading');
     try {
-      const res = await fetch('/api/subscribe', {
+      const res = await fetch('/api/waitlist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, source: 'cta_footer' }),
+        body: JSON.stringify({ email: trimmed, source: 'cta_footer' }),
       });
       if (res.ok) {
         setStatus('success');
@@ -63,7 +67,17 @@ export const Cta: React.FC = () => {
                   placeholder={COPY.cta.left.inputPlaceholder}
                   type="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (status === 'error' && isValidEmail(e.target.value.trim())) {
+                      setStatus('idle');
+                    }
+                  }}
+                  onBlur={() => {
+                    if (email && !isValidEmail(email.trim())) {
+                      setStatus('error');
+                    }
+                  }}
                   error={status === 'error' ? 'Please enter a valid email address' : undefined}
                 />
                 <Button type="submit" size="lg" variant="primary" className="w-full" disabled={status === 'loading'}>

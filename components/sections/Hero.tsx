@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/Button';
 import { COPY } from '@/content/copy';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { cn } from '@/lib/cn';
+import { isValidEmail } from '@/lib/validateEmail';
 import Image from 'next/image';
 import React, { useState } from 'react';
 import heroBg from '../hero/Image/Herobg.png';
@@ -21,8 +22,10 @@ export const Hero: React.FC = () => {
     e.preventDefault();
     if (honeypot) return;
 
-    // Client-side email shape check
-    if (!email || !email.includes('@') || !email.includes('.')) {
+    const trimmed = email.trim();
+    if (trimmed !== email) setEmail(trimmed);
+
+    if (!isValidEmail(trimmed)) {
       setStatus('error');
       setErrorMessage(COPY.hero.errorState);
       return;
@@ -195,7 +198,16 @@ export const Hero: React.FC = () => {
                       value={email}
                       onChange={(e) => {
                         setEmail(e.target.value);
-                        if (status === 'error') setStatus('idle');
+                        if (status === 'error' && isValidEmail(e.target.value.trim())) {
+                          setStatus('idle');
+                          setErrorMessage('');
+                        }
+                      }}
+                      onBlur={() => {
+                        if (email && !isValidEmail(email.trim())) {
+                          setStatus('error');
+                          setErrorMessage(COPY.hero.errorState);
+                        }
                       }}
                       placeholder={COPY.hero.inputPlaceholder}
                       disabled={status === 'submitting'}
