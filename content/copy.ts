@@ -1,3 +1,5 @@
+const CONTACT_EMAIL = 'sahvo.app@gmail.com';
+
 export const COPY = {
   nav: {
     wordmark: 'sahvo',
@@ -241,25 +243,25 @@ export const COPY = {
       title: "We're looking for a technical co-founder.",
       body: "Sahvo needs someone who wants to own the engineering: offline-first mobile, a verification pipeline that can't be gamed, and a safety feature that has to work on a bad network at the worst possible moment. Equity, not salary, at this stage.",
       button: 'Email the founder',
-      mailto: 'mailto:sahvosupport@gmail.com?subject=Technical%20co-founder%20—%20Sahvo',
+      mailto: `mailto:${CONTACT_EMAIL}?subject=Technical%20co-founder%20—%20Sahvo`,
     },
   },
   footer: {
     descriptor: 'Sahvo — a trust layer for travel in India. In development, Jaipur.',
     contact: {
-      general: 'sahvosupport@gmail.com',
-      founder: 'sahvosupport@gmail.com',
+      general: CONTACT_EMAIL,
+      founder: CONTACT_EMAIL,
     },
     cta: {
       right: {
-        mailto: 'mailto:sahvosupport@gmail.com?subject=Technical%20co-founder%20—%20Sahvo',
+      mailto: `mailto:${CONTACT_EMAIL}?subject=Technical%20co-founder%20—%20Sahvo`,
       },
     },
     columns: [
       {
         title: 'Contact',
         links: [
-          { label: 'sahvosupport@gmail.com', href: 'mailto:sahvosupport@gmail.com' },
+          { label: CONTACT_EMAIL, href: `mailto:${CONTACT_EMAIL}` },
         ],
       },
       {

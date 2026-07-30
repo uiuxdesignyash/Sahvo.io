@@ -1,5 +1,6 @@
 'use client';
 
+import { COPY } from '@/content/copy';
 import { isValidEmail } from '@/lib/validateEmail';
 import React, { useState } from 'react';
 
@@ -49,11 +50,11 @@ export function useWaitlistForm({ source, honeypot = '' }: UseWaitlistFormOption
         setErrorMessage('Too many requests. Please try again later.');
       } else {
         setStatus('error');
-        setErrorMessage(data.error || 'Something went wrong. Try again, or email sahvo.app@gmail.com');
+        setErrorMessage(data.error || `Something went wrong. Try again, or email ${COPY.footer.contact.general}`);
       }
     } catch {
       setStatus('error');
-      setErrorMessage('Something went wrong. Try again, or email sahvo.app@gmail.com');
+      setErrorMessage(`Something went wrong. Try again, or email ${COPY.footer.contact.general}`);
     }
   };
 
