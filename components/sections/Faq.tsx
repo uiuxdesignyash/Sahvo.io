@@ -10,7 +10,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 const FAQ_ITEMS = [
   {
     q: "Why can't I just use ChatGPT, Google Translate and a calculator?",
-    a: "Those tools give you general answers. Sahvo gives you local, verified ones — and acts when it matters. A calculator can't tell you what an auto ride from Hawa Mahal to Amber Fort should actually cost today. Translation doesn't verify that the guide in front of you is licensed. And none of them send your location to your family and the nearest police station when you're in trouble, with no internet. Sahvo does that over SMS. General tools inform. Sahvo protects.",
+    a: "Those tools give you general answers. Sahvo gives you local, verified ones — and acts when it matters. A calculator can't tell you what an auto ride from Hawa Mahal to Amber Fort should actually cost today. Translation doesn't verify that the guide in front of you is licensed. And none of them send your location to the emergency contacts you've chosen when you're in trouble, with no internet. Sahvo does that over SMS. General tools inform. Sahvo protects.",
   },
   {
     q: 'Why launch in Jaipur first?',

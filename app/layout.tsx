@@ -68,7 +68,7 @@ export default function RootLayout({
         '@id': `${SITE_URL}/#organization`,
         name: 'Sahvo',
         url: SITE_URL,
-        logo: `${SITE_URL}/components/logo/Primary_logo1.png`,
+        logo: `${SITE_URL}/Primary_logo1.png`,
         email: COPY.footer.contact.general,
         description: 'Building a trust layer over Indian travel.',
         areaServed: 'IN',
