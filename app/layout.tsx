@@ -1,39 +1,54 @@
 import { figtree, jetbrains, notoDeva } from '@/app/fonts';
 import '@/app/globals.css';
 import { SmoothScroll } from '@/components/motion/SmoothScroll';
-import type { Metadata } from 'next';
+import { SITE_URL } from '@/lib/site';
+import { COPY } from '@/content/copy';
+import type { Metadata, Viewport } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Sahvo — Know the fare. Know the guide.',
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: 'Sahvo — Know the fare. Know the guide.',
+    template: '%s | Sahvo',
+  },
   description:
-    'Sahvo is a mobile safety and assistance app for travellers in India — a trust layer over Indian travel. Pre-MVP Jaipur pilot launching in Hindi and English.',
+    'Sahvo is a mobile safety and price-transparency app for travellers in India. Verified guides, fair fares, one-tap SOS. In development, launching in Jaipur.',
   keywords: [
-    'India travel safety',
-    'Jaipur tourist assistance',
-    'verified tourist guides India',
-    'auto fare calculator Jaipur',
-    'tourist emergency SOS',
+    'travel safety India',
+    'verified tourist guides Jaipur',
+    'auto fare calculator India',
+    'travel scam protection',
   ],
   authors: [{ name: 'Sahvo Team' }],
+  alternates: { canonical: '/' },
   openGraph: {
-    title: 'Sahvo — Tourist Safety & Price Transparency in India',
-    description:
-      'A trust layer over Indian travel. Know the fare. Know the guide. Know where help is.',
-    url: 'https://sahvo.app',
-    siteName: 'Sahvo',
-    locale: 'en_IN',
     type: 'website',
+    siteName: 'Sahvo',
+    title: 'Sahvo — Know the fare. Know the guide.',
+    description:
+      'A trust layer for travel in India. Verified guides, fair fares, one-tap SOS. Launching in Jaipur.',
+    url: SITE_URL,
+    locale: 'en_IN',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Sahvo — a trust layer for travel in India',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Sahvo — Tourist Safety & Price Transparency in India',
-    description:
-      'A trust layer over Indian travel. Pre-MVP pilot launching in Jaipur.',
+    title: 'Sahvo — Know the fare. Know the guide.',
+    description: 'A trust layer for travel in India. Launching in Jaipur.',
+    images: ['/og-image.png'],
   },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  robots: { index: true, follow: true },
+};
+
+export const viewport: Viewport = {
+  themeColor: '#0B53FF',
 };
 
 export default function RootLayout({
@@ -41,24 +56,28 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // JSON-LD for Organization & WebSite only (SEO-02 & Design.md §12 Criterion 14)
   const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
       {
         '@type': 'Organization',
-        '@id': 'https://sahvo.app/#organization',
-        name: 'Sahvo Technologies',
-        url: 'https://sahvo.app',
+        '@id': `${SITE_URL}/#organization`,
+        name: 'Sahvo',
+        url: SITE_URL,
+        logo: `${SITE_URL}/components/logo/Primary_logo1.png`,
+        email: COPY.footer.contact.general,
         description: 'Building a trust layer over Indian travel.',
+        areaServed: 'IN',
+        sameAs: [COPY.hero.social.linkedin, COPY.hero.social.instagram],
       },
       {
         '@type': 'WebSite',
-        '@id': 'https://sahvo.app/#website',
-        url: 'https://sahvo.app',
+        '@id': `${SITE_URL}/#website`,
+        url: SITE_URL,
         name: 'Sahvo',
+        inLanguage: 'en-IN',
         publisher: {
-          '@id': 'https://sahvo.app/#organization',
+          '@id': `${SITE_URL}/#organization`,
         },
       },
     ],
@@ -66,7 +85,7 @@ export default function RootLayout({
 
   return (
     <html
-      lang="en"
+      lang="en-IN"
       className={`${figtree.variable} ${jetbrains.variable} ${notoDeva.variable} scroll-smooth`}
     >
       <head>
