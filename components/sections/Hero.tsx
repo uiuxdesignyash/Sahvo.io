@@ -374,20 +374,20 @@ export const Hero: React.FC = () => {
           /* Glass card: 24px gap above, vertical stack */
           .hero-card {
             margin-top: 24px !important;
-            padding: 12px !important;
-            border-radius: 14px !important;
+            padding: 16px !important;
+            border-radius: 16px !important;
           }
           .hero-form {
             flex-direction: column !important;
-            gap: 10px !important;
+            gap: 12px !important;
           }
           .hero-input {
-            height: 52px !important;
+            height: 56px !important;
             font-size: 16px !important;
             width: 100% !important;
           }
           .hero-btn {
-            height: 52px !important;
+            height: 56px !important;
             width: 100% !important;
           }
           /* Body copy: 14px, 16px gap above */
