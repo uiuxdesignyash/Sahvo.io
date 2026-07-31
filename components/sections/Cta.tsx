@@ -13,9 +13,12 @@ export const Cta: React.FC = () => {
     email,
     status,
     errorMessage,
+    consent,
+    consentError,
     handleSubmit: baseHandleSubmit,
     handleBlur,
     handleChange,
+    handleConsentChange,
   } = useWaitlistForm({ source: 'cta', honeypot });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -82,12 +85,36 @@ export const Cta: React.FC = () => {
                   onBlur={handleBlur}
                   error={status === 'error' ? errorMessage : undefined}
                 />
-                <Button type="submit" size="lg" variant="primary" className="w-full" disabled={status === 'submitting'}>
+                <div>
+                  <label
+                    htmlFor="cta-consent"
+                    className="flex items-start gap-2 cursor-pointer select-none text-xs text-[var(--color-text-secondary)]"
+                  >
+                    <input
+                      id="cta-consent"
+                      type="checkbox"
+                      checked={consent}
+                      onChange={(e) => handleConsentChange(e.target.checked)}
+                      disabled={status === 'submitting'}
+                      className="mt-0.5 h-4 w-4 shrink-0 rounded border-[var(--color-border-interactive)] bg-[var(--color-surface-base)] text-[var(--color-brand-primary)] focus:ring-2 focus:ring-[var(--color-focus-ring-light)] focus:ring-offset-0 disabled:opacity-50 accent-[var(--color-brand-primary)]"
+                      aria-describedby={consentError ? 'cta-consent-error' : undefined}
+                    />
+                    <span>
+                      Email me when the Jaipur pilot opens. I&apos;ve read the{' '}
+                      <a href="/privacy" className="underline hover:text-[var(--color-text-primary)] transition-colors duration-150">
+                        Privacy Policy
+                      </a>.
+                    </span>
+                  </label>
+                  {consentError && (
+                    <p id="cta-consent-error" className="mt-1 text-xs font-medium text-[var(--color-alert-sos)]" role="alert">
+                      {consentError}
+                    </p>
+                  )}
+                </div>
+                <Button type="submit" size="lg" variant="primary" className="w-full" disabled={status === 'submitting' || !consent}>
                   {status === 'submitting' ? 'Joining...' : COPY.cta.left.button}
                 </Button>
-                <p className="text-xs text-[var(--color-text-tertiary)]">
-                  {COPY.cta.left.microcopy}
-                </p>
               </form>
             )}
           </div>

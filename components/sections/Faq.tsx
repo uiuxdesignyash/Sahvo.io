@@ -160,6 +160,8 @@ const QueryForm: React.FC = () => {
   const [hp, setHp] = useState('');
   const [status, setStatus] = useState<FormStatus>('idle');
   const [errorMsg, setErrorMsg] = useState('');
+  const [consent, setConsent] = useState(false);
+  const [consentError, setConsentError] = useState('');
   const mountedAt = useRef(Date.now());
 
   useEffect(() => {
@@ -172,6 +174,11 @@ const QueryForm: React.FC = () => {
     e.preventDefault();
     if (hp) return;
 
+    if (!consent) {
+      setConsentError('Please check the box to continue.');
+      return;
+    }
+
     if (!isValidEmail(email) || !question.trim() || question.trim().length < 10) {
       setStatus('invalid');
       return;
@@ -182,7 +189,15 @@ const QueryForm: React.FC = () => {
       const res = await fetch('/api/query', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, question, company: hp, mountedAt: mountedAt.current }),
+        body: JSON.stringify({
+          name,
+          email,
+          question,
+          company: hp,
+          mountedAt: mountedAt.current,
+          consent: true,
+          consentVersion: '2026-07-31',
+        }),
       });
 
       const data = await res.json();
@@ -327,8 +342,8 @@ const QueryForm: React.FC = () => {
           type="submit"
           size="lg"
           variant="primary"
-          disabled={status === 'submitting'}
-          className="w-full sm:w-auto"
+          disabled={status === 'submitting' || !consent}
+          className="w-full sm:w-auto disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {status === 'submitting' ? (
             <span className="flex items-center gap-2">
@@ -341,13 +356,33 @@ const QueryForm: React.FC = () => {
           ) : 'Ask us'}
         </Button>
 
-        {/* Consent — DPDP Act 2023 */}
-        <p className="text-[11px] text-[var(--color-text-tertiary)]">
-          By submitting you agree to our{' '}
-          <a href="/privacy" className="underline hover:text-[var(--color-text-secondary)] transition-colors duration-150">
-            Privacy Policy
-          </a>.
-        </p>
+        <div>
+          <label
+            htmlFor="faq-consent"
+            className="flex items-start gap-2 cursor-pointer select-none text-xs text-[var(--color-text-secondary)]"
+          >
+            <input
+              id="faq-consent"
+              type="checkbox"
+              checked={consent}
+              onChange={(e) => { setConsent(e.target.checked); if (e.target.checked) setConsentError(''); }}
+              disabled={status === 'submitting'}
+              className="mt-0.5 h-4 w-4 shrink-0 rounded border-[var(--color-border-interactive)] bg-[var(--color-surface-base)] text-[var(--color-brand-primary)] focus:ring-2 focus:ring-[var(--color-focus-ring-light)] focus:ring-offset-0 disabled:opacity-50 accent-[var(--color-brand-primary)]"
+              aria-describedby={consentError ? 'faq-consent-error' : undefined}
+            />
+            <span>
+              Use my email to reply to this question. I&apos;ve read the{' '}
+              <a href="/privacy" className="underline hover:text-[var(--color-text-primary)] transition-colors duration-150">
+                Privacy Policy
+              </a>.
+            </span>
+          </label>
+          {consentError && (
+            <p id="faq-consent-error" className="mt-1 text-xs font-medium text-[var(--color-alert-sos)]" role="alert">
+              {consentError}
+            </p>
+          )}
+        </div>
       </form>
     </div>
   );

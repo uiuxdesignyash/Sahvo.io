@@ -49,9 +49,13 @@ export async function POST(request: Request) {
     if (!shape.ok) return shape.response;
 
     const body = await request.json();
-    const { name, email, question, company, mountedAt } = body;
+    const { name, email, question, company, mountedAt, consent, consentVersion } = body;
 
     if (company) {
+      return NextResponse.json({ ok: true }, { status: 200 });
+    }
+
+    if (!consent) {
       return NextResponse.json({ ok: true }, { status: 200 });
     }
 
@@ -113,6 +117,7 @@ export async function POST(request: Request) {
           email,
           question: trimmedQuestion,
           userAgent,
+          consentVersion,
         }),
         signal: controller.signal,
         redirect: 'follow',

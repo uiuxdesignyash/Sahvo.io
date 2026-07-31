@@ -17,9 +17,12 @@ export const Hero: React.FC = () => {
     email,
     status,
     errorMessage,
+    consent,
+    consentError,
     handleSubmit: baseHandleSubmit,
     handleBlur,
     handleChange,
+    handleConsentChange,
   } = useWaitlistForm({ source: 'hero', honeypot });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -188,8 +191,8 @@ export const Hero: React.FC = () => {
                       type="submit"
                       variant="primary"
                       size="md"
-                      disabled={status === 'submitting'}
-                      className="hero-btn px-5 whitespace-nowrap"
+                      disabled={status === 'submitting' || !consent}
+                      className="hero-btn px-5 whitespace-nowrap disabled:opacity-40 disabled:cursor-not-allowed"
                       style={{ height: 56 }}
                     >
                       {status === 'submitting' ? (
@@ -213,6 +216,38 @@ export const Hero: React.FC = () => {
                 </p>
               )}
 
+              {/* Consent checkbox — DPDP Act 2023 */}
+              {(status === 'idle' || status === 'error' || status === 'submitting') && (
+                <div className="mt-3">
+                  <label
+                    htmlFor="hero-consent"
+                    className="flex items-start gap-2 cursor-pointer select-none"
+                    style={{ fontSize: 13 }}
+                  >
+                    <input
+                      id="hero-consent"
+                      type="checkbox"
+                      checked={consent}
+                      onChange={(e) => handleConsentChange(e.target.checked)}
+                      disabled={status === 'submitting'}
+                      className="mt-0.5 h-4 w-4 shrink-0 rounded border-white/40 bg-transparent text-[var(--color-brand-primary)] focus:ring-2 focus:ring-white/45 focus:ring-offset-0 disabled:opacity-50 accent-[var(--color-brand-primary)]"
+                      aria-describedby={consentError ? 'hero-consent-error' : undefined}
+                    />
+                    <span className="text-white/85">
+                      Email me when the Jaipur pilot opens. I&apos;ve read the{' '}
+                      <a href="/privacy" className="underline hover:text-white/70 transition-colors duration-150">
+                        Privacy Policy
+                      </a>.
+                    </span>
+                  </label>
+                  {consentError && (
+                    <p id="hero-consent-error" className="mt-1 text-[var(--color-alert-sos)]" style={{ fontSize: 12 }} role="alert">
+                      {consentError}
+                    </p>
+                  )}
+                </div>
+              )}
+
               {/* Body copy */}
               <p
                 className={cn(
@@ -222,20 +257,6 @@ export const Hero: React.FC = () => {
                 style={{ fontSize: 13, lineHeight: 1.5 }}
               >
                 {COPY.hero.bodyCopy}
-              </p>
-
-              {/* Consent — DPDP Act 2023 */}
-              <p
-                className={cn(
-                  'text-white/50 mt-3',
-                  !prefersReducedMotion && 'animate-[heroFadeUp_0.6s_ease-out_0.35s_both]',
-                )}
-                style={{ fontSize: 11 }}
-              >
-                By joining you agree to our{' '}
-                <a href="/privacy" className="underline hover:text-white/70 transition-colors duration-150">
-                  Privacy Policy
-                </a>.
               </p>
             </div>
           </div>

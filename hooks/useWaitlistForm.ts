@@ -15,11 +15,18 @@ export function useWaitlistForm({ source, honeypot = '' }: UseWaitlistFormOption
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<WaitlistStatus>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [consent, setConsent] = useState(false);
+  const [consentError, setConsentError] = useState('');
   const mountedAt = useRef(Date.now());
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (honeypot) return;
+
+    if (!consent) {
+      setConsentError('Please check the box to continue.');
+      return;
+    }
 
     const trimmed = email.trim();
     if (trimmed !== email) setEmail(trimmed);
@@ -35,7 +42,14 @@ export function useWaitlistForm({ source, honeypot = '' }: UseWaitlistFormOption
       const res = await fetch('/api/waitlist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: trimmed, source, company: honeypot, mountedAt: mountedAt.current }),
+        body: JSON.stringify({
+          email: trimmed,
+          source,
+          company: honeypot,
+          mountedAt: mountedAt.current,
+          consent: true,
+          consentVersion: '2026-07-31',
+        }),
       });
 
       const data = await res.json();
@@ -74,12 +88,20 @@ export function useWaitlistForm({ source, honeypot = '' }: UseWaitlistFormOption
     }
   };
 
+  const handleConsentChange = (checked: boolean) => {
+    setConsent(checked);
+    if (checked) setConsentError('');
+  };
+
   return {
     email,
     status,
     errorMessage,
+    consent,
+    consentError,
     handleSubmit,
     handleBlur,
     handleChange,
+    handleConsentChange,
   };
 }
