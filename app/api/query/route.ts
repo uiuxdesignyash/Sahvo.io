@@ -55,10 +55,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: true }, { status: 200 });
     }
 
-    if (!consent) {
-      return NextResponse.json({ ok: true }, { status: 200 });
-    }
-
     if (!isHumanDelay(mountedAt)) {
       return NextResponse.json({ ok: true }, { status: 200 });
     }

@@ -17,12 +17,9 @@ export const Hero: React.FC = () => {
     email,
     status,
     errorMessage,
-    consent,
-    consentError,
     handleSubmit: baseHandleSubmit,
     handleBlur,
     handleChange,
-    handleConsentChange,
   } = useWaitlistForm({ source: 'hero', honeypot });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -187,12 +184,18 @@ export const Hero: React.FC = () => {
                       style={{ fontSize: 15, caretColor: 'white' }}
                       aria-label="Email address"
                     />
+                    <p className="text-white/65" style={{ fontSize: 11, lineHeight: 1.4 }}>
+                      We&apos;ll email you when the Jaipur pilot opens. Nothing else.{' '}
+                      <a href="/privacy" className="text-white/85 underline hover:text-white/70 transition-colors duration-150">
+                        Privacy Policy
+                      </a>
+                    </p>
                     <Button
                       type="submit"
                       variant="primary"
                       size="md"
-                      disabled={status === 'submitting' || !consent}
-                      className="hero-btn px-5 whitespace-nowrap disabled:opacity-40 disabled:cursor-not-allowed"
+                      disabled={status === 'submitting'}
+                      className="hero-btn px-5 whitespace-nowrap"
                       style={{ height: 56 }}
                     >
                       {status === 'submitting' ? (
@@ -214,38 +217,6 @@ export const Hero: React.FC = () => {
                 <p className="mt-2 text-white/90" style={{ fontSize: 13 }} role="alert">
                   {errorMessage}
                 </p>
-              )}
-
-              {/* Consent checkbox — DPDP Act 2023 */}
-              {(status === 'idle' || status === 'error' || status === 'submitting') && (
-                <div className="mt-3">
-                  <label
-                    htmlFor="hero-consent"
-                    className="flex items-start gap-2 cursor-pointer select-none"
-                    style={{ fontSize: 13 }}
-                  >
-                    <input
-                      id="hero-consent"
-                      type="checkbox"
-                      checked={consent}
-                      onChange={(e) => handleConsentChange(e.target.checked)}
-                      disabled={status === 'submitting'}
-                      className="mt-0.5 h-4 w-4 shrink-0 rounded border-white/40 bg-transparent text-[var(--color-brand-primary)] focus:ring-2 focus:ring-white/45 focus:ring-offset-0 disabled:opacity-50 accent-[var(--color-brand-primary)]"
-                      aria-describedby={consentError ? 'hero-consent-error' : undefined}
-                    />
-                    <span className="text-white/85">
-                      Email me when the Jaipur pilot opens. I&apos;ve read the{' '}
-                      <a href="/privacy" className="underline hover:text-white/70 transition-colors duration-150">
-                        Privacy Policy
-                      </a>.
-                    </span>
-                  </label>
-                  {consentError && (
-                    <p id="hero-consent-error" className="mt-1 text-[var(--color-alert-sos)]" style={{ fontSize: 12 }} role="alert">
-                      {consentError}
-                    </p>
-                  )}
-                </div>
               )}
 
               {/* Body copy */}
@@ -425,10 +396,6 @@ export const Hero: React.FC = () => {
           .hero-root .hero-card ~ p {
             font-size: 14px !important;
             margin-top: 16px !important;
-          }
-          /* Consent: 12px gap above */
-          .hero-root .hero-card ~ p + p {
-            margin-top: 12px !important;
           }
           .hero-root .lg\:max-w-\[420px\] {
             max-width: 100% !important;
