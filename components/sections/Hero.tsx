@@ -165,13 +165,6 @@ export const Hero: React.FC = () => {
                       aria-hidden="true"
                       className="absolute opacity-0 pointer-events-none h-0 w-0 overflow-hidden"
                     />
-                    <label
-                      htmlFor="hero-email"
-                      className="text-white/70 font-semibold uppercase tracking-[0.08em]"
-                      style={{ fontSize: 11 }}
-                    >
-                      EMAIL ADDRESS
-                    </label>
                     <input
                       id="hero-email"
                       type="email"
@@ -181,8 +174,9 @@ export const Hero: React.FC = () => {
                       onBlur={handleBlur}
                       placeholder={COPY.hero.inputPlaceholder}
                       disabled={status === 'submitting'}
+                      aria-label="Email address"
                       className={cn(
-                        'hero-input w-full px-4 text-white outline-none mt-2',
+                        'hero-input w-full px-4 text-white outline-none',
                         'placeholder:text-white/55',
                         'focus:border-[rgba(255,255,255,0.55)]',
                         'disabled:opacity-50',
@@ -198,10 +192,18 @@ export const Hero: React.FC = () => {
                       }}
                     />
                     <p className="text-white/60 mt-2.5" style={{ fontSize: 11, lineHeight: 1.4 }}>
-                      We&apos;ll email you when the Jaipur pilot opens. Nothing else.{' '}
-                      <a href="/privacy" className="text-white/80 underline hover:text-white/70 transition-colors duration-150">
-                        Privacy Policy
-                      </a>
+                      <span className="hidden md:inline">
+                        We&apos;ll email you when the Jaipur pilot opens. Nothing else.{' '}
+                        <a href="/privacy" className="text-white/80 underline hover:text-white/70 transition-colors duration-150">
+                          Privacy Policy
+                        </a>
+                      </span>
+                      <span className="md:hidden" style={{ whiteSpace: 'nowrap' }}>
+                        One email when the pilot opens.{' '}
+                        <a href="/privacy" className="text-white/80 underline hover:text-white/70 transition-colors duration-150">
+                          Privacy Policy
+                        </a>
+                      </span>
                     </p>
                     <Button
                       type="submit"
