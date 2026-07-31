@@ -184,12 +184,6 @@ export const Hero: React.FC = () => {
                       style={{ fontSize: 15, caretColor: 'white' }}
                       aria-label="Email address"
                     />
-                    <p className="text-white/65" style={{ fontSize: 11, lineHeight: 1.4 }}>
-                      We&apos;ll email you when the Jaipur pilot opens. Nothing else.{' '}
-                      <a href="/privacy" className="text-white/85 underline hover:text-white/70 transition-colors duration-150">
-                        Privacy Policy
-                      </a>
-                    </p>
                     <Button
                       type="submit"
                       variant="primary"
@@ -218,6 +212,14 @@ export const Hero: React.FC = () => {
                   {errorMessage}
                 </p>
               )}
+
+              {/* Consent microcopy — below the glass card */}
+              <p className="text-white/60 mt-2.5 max-w-full lg:max-w-[420px]" style={{ fontSize: 11, lineHeight: 1.4 }}>
+                We&apos;ll email you when the Jaipur pilot opens. Nothing else.{' '}
+                <a href="/privacy" className="text-white/80 underline hover:text-white/70 transition-colors duration-150">
+                  Privacy Policy
+                </a>
+              </p>
 
               {/* Body copy */}
               <p
