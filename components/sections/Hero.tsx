@@ -134,7 +134,7 @@ export const Hero: React.FC = () => {
               {/* Email capture card — glass */}
               <div
                 className={cn(
-                  'hero-card rounded-2xl p-2',
+                  'hero-card rounded-[18px] p-5',
                   !prefersReducedMotion && 'animate-[heroFadeUp_0.6s_ease-out_0.2s_both]',
                 )}
                 style={{
@@ -146,14 +146,14 @@ export const Hero: React.FC = () => {
                 aria-live="polite"
               >
                 {status === 'success' || status === 'duplicate' ? (
-                  <div className="flex items-center justify-center gap-2 px-4 rounded-xl bg-white/10 text-white text-sm font-medium" style={{ height: 56 }}>
+                  <div className="flex items-center justify-center gap-2 px-4 rounded-xl bg-white/10 text-white text-sm font-medium" style={{ height: 52 }}>
                     <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                     {status === 'duplicate' ? "You're already on the list." : COPY.hero.successState}
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmit} className="hero-form flex flex-col sm:flex-row gap-2">
+                  <form onSubmit={handleSubmit} className="hero-form flex flex-col gap-0">
                     {/* Honeypot — visually hidden, not display:none */}
                     <input
                       type="text"
@@ -165,7 +165,15 @@ export const Hero: React.FC = () => {
                       aria-hidden="true"
                       className="absolute opacity-0 pointer-events-none h-0 w-0 overflow-hidden"
                     />
+                    <label
+                      htmlFor="hero-email"
+                      className="text-white/70 font-semibold uppercase tracking-[0.08em]"
+                      style={{ fontSize: 11 }}
+                    >
+                      EMAIL ADDRESS
+                    </label>
                     <input
+                      id="hero-email"
                       type="email"
                       required
                       value={email}
@@ -174,23 +182,34 @@ export const Hero: React.FC = () => {
                       placeholder={COPY.hero.inputPlaceholder}
                       disabled={status === 'submitting'}
                       className={cn(
-                        'hero-input flex-1 px-4 rounded-xl min-w-0 text-white outline-none',
-                        'bg-transparent border-none',
-                        'placeholder:text-white/70',
-                        'focus-visible:ring-1 focus-visible:ring-white/45',
+                        'hero-input w-full px-4 text-white outline-none mt-2',
+                        'placeholder:text-white/55',
+                        'focus:border-[rgba(255,255,255,0.55)]',
                         'disabled:opacity-50',
-                        status === 'error' && 'ring-2 ring-[var(--color-alert-sos)]',
+                        status === 'error' && 'border-[var(--color-alert-sos)]',
                       )}
-                      style={{ fontSize: 15, caretColor: 'white' }}
-                      aria-label="Email address"
+                      style={{
+                        height: 52,
+                        fontSize: 16,
+                        borderRadius: 12,
+                        background: 'rgba(255,255,255,0.06)',
+                        border: '1px solid rgba(255,255,255,0.28)',
+                        caretColor: 'white',
+                      }}
                     />
+                    <p className="text-white/60 mt-2.5" style={{ fontSize: 11, lineHeight: 1.4 }}>
+                      We&apos;ll email you when the Jaipur pilot opens. Nothing else.{' '}
+                      <a href="/privacy" className="text-white/80 underline hover:text-white/70 transition-colors duration-150">
+                        Privacy Policy
+                      </a>
+                    </p>
                     <Button
                       type="submit"
                       variant="primary"
                       size="md"
                       disabled={status === 'submitting'}
-                      className="hero-btn px-5 whitespace-nowrap"
-                      style={{ height: 56 }}
+                      className="hero-btn w-full mt-3.5"
+                      style={{ height: 52, borderRadius: 12 }}
                     >
                       {status === 'submitting' ? (
                         <span className="flex items-center gap-2">
@@ -212,14 +231,6 @@ export const Hero: React.FC = () => {
                   {errorMessage}
                 </p>
               )}
-
-              {/* Consent microcopy — below the glass card */}
-              <p className="text-white/60 mt-2.5 max-w-full lg:max-w-[420px]" style={{ fontSize: 11, lineHeight: 1.4 }}>
-                We&apos;ll email you when the Jaipur pilot opens. Nothing else.{' '}
-                <a href="/privacy" className="text-white/80 underline hover:text-white/70 transition-colors duration-150">
-                  Privacy Policy
-                </a>
-              </p>
 
               {/* Body copy */}
               <p
@@ -374,23 +385,24 @@ export const Hero: React.FC = () => {
           /* Glass card: 24px gap above, vertical stack */
           .hero-card {
             margin-top: 24px !important;
-            padding: 10px !important;
-            border-radius: 16px !important;
+            padding: 16px !important;
+            border-radius: 18px !important;
           }
           .hero-form {
             flex-direction: column !important;
-            gap: 8px !important;
+            gap: 0 !important;
           }
           .hero-input {
             height: 52px !important;
             font-size: 16px !important;
             width: 100% !important;
-            padding: 0 18px !important;
+            padding: 0 16px !important;
             border-radius: 12px !important;
           }
           .hero-btn {
-            height: 48px !important;
+            height: 52px !important;
             width: 100% !important;
+            border-radius: 12px !important;
             padding-top: 0 !important;
             padding-bottom: 0 !important;
           }
