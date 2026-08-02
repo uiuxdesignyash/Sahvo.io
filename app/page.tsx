@@ -1,6 +1,7 @@
 import { Cta } from '@/components/sections/Cta';
 import { Faq } from '@/components/sections/Faq';
 import { Features } from '@/components/sections/Features';
+import { Feedback } from '@/components/sections/Feedback';
 import { Footer } from '@/components/sections/Footer';
 import { Hero } from '@/components/sections/Hero';
 import { Market } from '@/components/sections/Market';
@@ -22,6 +23,7 @@ export default function Home() {
       <Market />
       <Roadmap />
       <Faq />
+      <Feedback />
       <Cta />
       <Footer />
     </main>

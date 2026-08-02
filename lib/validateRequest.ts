@@ -1,4 +1,13 @@
 const SITE_ORIGIN = 'https://sahvo-io.vercel.app';
+const ALLOWED_ORIGINS = [
+  SITE_ORIGIN,
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+];
+
+function isAllowedOrigin(origin: string): boolean {
+  return ALLOWED_ORIGINS.some((allowed) => origin === allowed || origin.startsWith(allowed));
+}
 
 export function validateRequestShape(
   request: Request,
@@ -27,7 +36,7 @@ export function validateRequestShape(
   }
 
   const origin = request.headers.get('origin');
-  if (origin && origin !== SITE_ORIGIN) {
+  if (origin && !isAllowedOrigin(origin)) {
     return {
       ok: false,
       response: Response.json({ ok: true }, { status: 200 }),
@@ -35,7 +44,7 @@ export function validateRequestShape(
   }
 
   const referer = request.headers.get('referer');
-  if (referer && !referer.startsWith(SITE_ORIGIN)) {
+  if (referer && !ALLOWED_ORIGINS.some((allowed) => referer.startsWith(allowed))) {
     return {
       ok: false,
       response: Response.json({ ok: true }, { status: 200 }),

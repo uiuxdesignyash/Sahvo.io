@@ -177,24 +177,24 @@ const QueryForm: React.FC = () => {
       return;
     }
 
+    const body = {
+      name,
+      email,
+      question,
+      company: hp,
+      mountedAt: mountedAt.current,
+      consent: true,
+      consentVersion: '2026-07-31',
+    };
     setStatus('submitting');
     try {
       const res = await fetch('/api/query', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name,
-          email,
-          question,
-          company: hp,
-          mountedAt: mountedAt.current,
-          consent: true,
-          consentVersion: '2026-07-31',
-        }),
+        body: JSON.stringify(body),
       });
 
       const data = await res.json();
-
       if (res.ok && data.ok) {
         if (data.duplicate) {
           setStatus('duplicate');
