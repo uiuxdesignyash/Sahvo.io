@@ -528,26 +528,26 @@ export const Feedback: React.FC = () => {
                     Name and email are optional. We&apos;ll only use them to follow up on your feedback, and we&apos;ll ask before quoting you anywhere.
                   </p>
 
-                  <div className="flex items-center justify-between mt-3">
+                  <div className="flex flex-col items-center gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-0 mt-3">
+                    <Button
+                      onClick={handleSubmit}
+                      disabled={submitting}
+                      variant="primary"
+                      size="md"
+                      className="w-full h-[52px] sm:w-auto sm:h-11 order-1 sm:order-2"
+                    >
+                      {submitting ? 'Sending…' : 'Submit'}
+                    </Button>
                     <button
                       type="button"
                       onClick={() => goToStep(3, 'backward')}
-                      className="flex items-center gap-1.5 text-xs font-semibold text-white/60 hover:text-white transition-colors"
+                      className="flex items-center gap-1.5 text-xs font-semibold text-white/60 hover:text-white transition-colors min-h-[44px] py-2.5 sm:p-0 order-2 sm:order-1"
                     >
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M19 12H5M12 19l-7-7 7-7" />
                       </svg>
                       Back
                     </button>
-                    <Button
-                      onClick={handleSubmit}
-                      disabled={submitting}
-                      variant="primary"
-                      size="md"
-                      className="w-full sm:w-auto mt-3 sm:mt-0"
-                    >
-                      {submitting ? 'Sending…' : 'Submit'}
-                    </Button>
                   </div>
                 </div>
               )}
