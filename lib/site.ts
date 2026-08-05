@@ -1,1 +1,1 @@
-export const SITE_URL = 'https://sahvo-io.vercel.app';
+export const SITE_URL = 'https://www.sahvoapp.com';

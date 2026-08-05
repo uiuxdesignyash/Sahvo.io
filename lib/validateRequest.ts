@@ -1,6 +1,7 @@
-const SITE_ORIGIN = 'https://sahvo-io.vercel.app';
+const SITE_ORIGIN = 'https://www.sahvoapp.com';
 const ALLOWED_ORIGINS = [
   SITE_ORIGIN,
+  'https://sahvo-io.vercel.app',
   'http://localhost:3000',
   'http://127.0.0.1:3000',
 ];
