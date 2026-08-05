@@ -47,7 +47,10 @@ export const metadata: Metadata = {
   },
   robots: { index: true, follow: true },
   verification: {
-    google: process.env.GOOGLE_SITE_VERIFICATION,
+    google: [
+      process.env.GOOGLE_SITE_VERIFICATION ?? 'tJ-ZTuaxn794MZL6_Edz37P965VxXDU8fdtuAhdQ00U',
+      'Iejk33hh8g6yKX9gqSukefs3D_dUId8pRKIo6RFp-tk',
+    ],
   },
 };
 
